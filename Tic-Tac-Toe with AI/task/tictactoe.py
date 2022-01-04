@@ -61,6 +61,7 @@ class TicTacToe:
         random_step = choice(steps_set)
         self.grid[random_step[0] - 1][random_step[1] - 1] = self.curr_player_sign
         self.print_grid()
+        print("Making move level \"%s\"" % self.mode)
 
     def game_rules_validation(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
@@ -80,52 +81,62 @@ class TicTacToe:
                 ]):
             print(f"{self.curr_player_sign} wins")
             self.state = "Finished"
+            return main()
 
         elif empty_cells < 1:  # at least 1 move left  # issue is here, DRAW function is not working
             print("Draw")
             self.state = "Finished"
+            return main()
 
     def user_vs_user(self):
         self.user_move()
-        print("Making move level \"%s\"" % self.mode)
+
         self.game_rules_validation()
         self.switch_player()
         self.user_move()
+
+
         self.game_rules_validation()
         self.switch_player()
 
     def user_vs_pc(self):
         self.user_move()
-        print("Making move level \"%s\"" % self.mode)
+
         self.game_rules_validation()
         self.switch_player()
         self.computer_move()
+
+
         self.game_rules_validation()
         self.switch_player()
 
     def pc_vs_pc(self):
         self.computer_move()
-        print("Making move level \"%s\"" % self.mode)
+
         self.game_rules_validation()
         self.switch_player()
         self.computer_move()
+
+
         self.game_rules_validation()
         self.switch_player()
 
 
-    def test(self):
+    def pc_then_user(self):
         self.computer_move()
-        print("Making move level \"%s\"" % self.mode)
+
         self.game_rules_validation()
         self.switch_player()
         self.user_move()
+
+
         self.game_rules_validation()
         self.switch_player()
 
 
 def main():
     game_mode = input("Input command: ")
-    if game_mode not in ("exit", "start easy user", "start user easy", "start user, user", "start easy easy"):
+    if game_mode not in ("exit", "start easy user", "start user easy", "start user user", "start easy easy"):
         print("Bad parameters!")
         return main()
     elif game_mode == "exit":
@@ -134,16 +145,17 @@ def main():
         game = TicTacToe()
         game.print_grid()  # print 1st clear grid/field
         while game.state != "Finished":
-            if game_mode == "start easy user" or "start user easy":
+            if game_mode == "start user easy":  # or game_mode == "start easy user":
                 game.user_vs_pc()
+            elif game_mode == "start easy user":
+                game.pc_then_user()
+
             elif game_mode == "start user user":
                 game.user_vs_user()
             elif game_mode == "start easy easy":
                 game.pc_vs_pc()
-            elif game_mode == "start user easy":
-                game.test()
 
+        return main()
 
 if __name__ == '__main__':
     main()
-

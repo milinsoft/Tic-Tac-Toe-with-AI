@@ -297,5 +297,23 @@ files:
         TicTacToeTests().run_tests()
   learner_created: false
 feedback_link: https://hyperskill.org/learn/step/7442#comment
-status: Unchecked
-record: -1
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #136
+
+    Expected not less than 2 grids in the output!
+    Make sure you print the game grids in the correct format!
+
+    Please find below the output of your program during this failed test.
+    Note that the '>' character indicates the beginning of the input line.
+
+    ---
+
+    Input command: > start user medium
+    Bad parameters!
+    Input command: > 2 2
+    Bad parameters!
+    Input command:
+  time: Tue, 04 Jan 2022 22:29:01 UTC
+record: 4

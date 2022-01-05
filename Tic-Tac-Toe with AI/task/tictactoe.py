@@ -88,59 +88,18 @@ class TicTacToe:
             self.state = "Finished"
             return main()
 
-    def game_scenario(self, player1, player2):
-        ...
-        """
-        replace 4 separate functions with this one.
-        """
-
-
-    def user_vs_user(self):
-        self.user_move()
-
+    def gameplay(self, _player1, _player2):
+        self.user_move() if _player1 == "user" else self.computer_move()
         self.game_rules_validation()
         self.switch_player()
-        self.user_move()
-
-
+        self.user_move() if _player2 == "user" else self.computer_move()
         self.game_rules_validation()
         self.switch_player()
 
-    def user_vs_pc(self):
-        self.user_move()
-
-        self.game_rules_validation()
-        self.switch_player()
-        self.computer_move()
+        # play with "current player to save 2 lines"?
 
 
-        self.game_rules_validation()
-        self.switch_player()
-
-    def pc_vs_pc(self):
-        self.computer_move()
-
-        self.game_rules_validation()
-        self.switch_player()
-        self.computer_move()
-
-
-        self.game_rules_validation()
-        self.switch_player()
-
-
-    def pc_then_user(self):
-        self.computer_move()
-
-        self.game_rules_validation()
-        self.switch_player()
-        self.user_move()
-
-
-        self.game_rules_validation()
-        self.switch_player()
-
-
+# make it @classmethod ?
 def main():
     game_parameters = input("Input command: ")
     if game_parameters not in ("exit", "start easy user", "start user easy", "start user user", "start easy easy"):
@@ -152,19 +111,11 @@ def main():
         game = TicTacToe()
         game.print_grid()  # print 1st clear grid/field
         while game.state != "Finished":
-            player1 = "" #
-            player2 = "" #
-            if game_parameters == "start user easy":  # or game_parameters == "start easy user":
-                game.user_vs_pc()
-            elif game_parameters == "start easy user":
-                game.pc_then_user()
-
-            elif game_parameters == "start user user":
-                game.user_vs_user()
-            elif game_parameters == "start easy easy":
-                game.pc_vs_pc()
-
+            player1, player2 =\
+                game_parameters.split()[1], game_parameters.split()[2]
+            game.gameplay(player1, player2)
         return main()
+
 
 if __name__ == '__main__':
     main()

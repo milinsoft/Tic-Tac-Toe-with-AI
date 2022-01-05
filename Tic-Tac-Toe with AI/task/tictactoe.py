@@ -7,12 +7,14 @@ from random import choice
 
 class TicTacToe:
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, mode):
         self.curr_player_sign = "X"  # default value as "X" makes the 1st move
+        self.next_player_sign = "O"
+
         self.grid = [[' ', ' ', ' '] for _ in range(3)]
         self.top, self.mid, self.bot = \
             self.grid[0], self.grid[1], self.grid[2]
-        self.mode = "easy"
+        self.mode = mode
         self.state = "in process"
         self.player1 = player1
         self.player2 = player2
@@ -20,7 +22,12 @@ class TicTacToe:
     @classmethod
     def from_string(cls):
         game_parameters = input("Input command: ")
-        if game_parameters not in ("exit", "start easy user", "start user easy", "start user user", "start easy easy"):
+        if game_parameters not in ("exit",
+                                   "start easy user", "start medium user", "start hard user",
+                                   "start user easy", "start user medium", "start user hard",
+                                   "start user user",
+                                   "start easy easy", "start medium, medium", "start hard hard"):
+
             print("Bad parameters!")
             return TicTacToe.from_string()
         elif game_parameters == "exit":
@@ -28,7 +35,15 @@ class TicTacToe:
         else:
             player_1, player_2 = \
                 game_parameters.split()[1], game_parameters.split()[2]
-            return cls(player_1, player_2)
+
+            if player_1 in "easy medium hard":
+                mode = player_1
+            elif player_2 in "easy medium hard":
+                mode = player_2
+            else:
+                mode = "easy"
+
+            return cls(player_1, player_2, mode)
 
     def current_state_analyzer(self):
         x_counter = 0
@@ -50,7 +65,7 @@ class TicTacToe:
             f"{9 * '-'}\n| {' '.join(self.top)} |\n| {' '.join(self.mid)} |\n| {' '.join(self.bot)} |\n{9 * '-'}")  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
 
     def switch_player(self):
-        self.curr_player_sign = "O" if self.curr_player_sign == "X" else "X"
+        self.curr_player_sign, self.next_player_sign = self.next_player_sign, self.curr_player_sign
 
     def user_move(self):
 
@@ -72,11 +87,97 @@ class TicTacToe:
             self.user_move()
 
     def computer_move(self):
-        steps_set = [(row + 1, cell + 1) for row in range(3) for cell in range(3) if self.grid[row][cell] == " "]
-        random_step = choice(steps_set)
-        self.grid[random_step[0] - 1][random_step[1] - 1] = self.curr_player_sign
-        self.print_grid()
-        print("Making move level \"%s\"" % self.mode)
+        def easy():
+            steps_set = [(row + 1, cell + 1) for row in range(3) for cell in range(3) if self.grid[row][cell] == " "]
+            random_step = choice(steps_set)
+            self.grid[random_step[0] - 1][random_step[1] - 1] = self.curr_player_sign
+            self.print_grid()
+            print("Making move level \"%s\"" % self.mode)
+
+        def medium():
+            print("current sign is:", self.curr_player_sign)
+            columns = list(zip(self.grid[0], self.grid[1], self.grid[2]))
+            step = ""
+            # try to match rows, columns and diagonals
+            for i in range(3):
+                # row
+                if self.grid[i].count(self.curr_player_sign) == 2 and " " in self.grid[i]:
+                    step = (i + 1, self.grid[i].index(' ') + 1)
+                    break
+                # column
+                elif columns[i].count(self.curr_player_sign) == 2 and " " in columns[i]:
+                    step = (columns[i].index(' ') + 1, i + 1)
+                    break
+                #diagonal
+
+                d2 = [self.grid[0][0], self.grid[1][1], self.grid[2][2]]
+                d1 = [self.grid[0][2], self.grid[1][1], self.grid[2][0]]
+
+                # try with manual binding in d1 and d2 cases using if-else
+
+                if d2.count(self.curr_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 0+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 2+1)}
+
+                    step = coordinates[str(d2.index(" "))]
+                    break
+                elif d1.count(self.curr_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 2+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 0+1)}
+
+                    step = coordinates[str(d1.index(" "))]
+                    break
+
+                # diagonal blocking
+
+                elif d2.count(self.next_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 0+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 2+1)}
+
+                    step = coordinates[str(d2.index(" "))]
+                    break
+
+                elif d1.count(self.next_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 2+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 0+1)}
+
+                    step = coordinates[str(d1.index(" "))]
+                    break
+
+
+            #print(columns)
+
+            if step:
+                print(step)
+                self.grid[step[0] - 1][step[1] - 1] = self.curr_player_sign
+                self.print_grid()
+                print("Making move level \"%s\"" % self.mode)
+                #for j in range(3):
+
+            # try to block user steps if nothing.
+
+            else:
+                easy()
+
+
+
+
+
+
+        def hard():
+            ...
+
+        if self.mode == 'easy':
+            easy()
+
+        elif self.mode == 'medium':
+            medium()
+        else:
+            hard()
 
     def game_rules_validation(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.

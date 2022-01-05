@@ -104,10 +104,19 @@ class TicTacToe:
                 if self.grid[i].count(self.curr_player_sign) == 2 and " " in self.grid[i]:
                     step = (i + 1, self.grid[i].index(' ') + 1)
                     break
+                # row blocker
+                elif self.grid[i].count(self.next_player_sign) == 2 and " " in self.grid[i]:
+                    step = (i + 1, self.grid[i].index(' ') + 1)
+                    break
                 # column
                 elif columns[i].count(self.curr_player_sign) == 2 and " " in columns[i]:
                     step = (columns[i].index(' ') + 1, i + 1)
                     break
+                # column blocker
+                elif columns[i].count(self.next_player_sign) == 2 and " " in columns[i]:
+                    step = (columns[i].index(' ') + 1, i + 1)
+                    break
+
                 #diagonal
 
                 d2 = [self.grid[0][0], self.grid[1][1], self.grid[2][2]]

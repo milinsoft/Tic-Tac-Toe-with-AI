@@ -26,7 +26,7 @@ class TicTacToe:
                                    "start easy user", "start medium user", "start hard user",
                                    "start user easy", "start user medium", "start user hard",
                                    "start user user",
-                                   "start easy easy", "start medium, medium", "start hard hard"):
+                                   "start easy easy", "start medium medium", "start hard hard"):
 
             print("Bad parameters!")
             return TicTacToe.from_string()
@@ -86,6 +86,10 @@ class TicTacToe:
             print("This cell is occupied! Choose another one!")
             self.user_move()
 
+    def mini_max(self):
+        ...
+
+
     def computer_move(self):
         def easy():
             steps_set = [(row + 1, cell + 1) for row in range(3) for cell in range(3) if self.grid[row][cell] == " "]
@@ -104,7 +108,6 @@ class TicTacToe:
 
             # win or block strategy
 
-            # try to match rows, columns and diagonals
             for i in range(3) or step == "":
                 # row win or block
                 if any([self.grid[i].count(self.curr_player_sign) == 2, self.grid[i].count(self.next_player_sign) == 2]) and " " in self.grid[i]:
@@ -114,10 +117,8 @@ class TicTacToe:
                 elif any([columns[i].count(self.curr_player_sign) == 2, columns[i].count(self.next_player_sign) == 2]) and " " in columns[i]:
                     step = (columns[i].index(' ') + 1, i + 1)
 
-
                 # diagonal win or block
-
-                if any([d2.count(self.curr_player_sign) == 2, d2.count(self.next_player_sign) == 2]) and " " in d2:
+                elif any([d2.count(self.curr_player_sign) == 2, d2.count(self.next_player_sign) == 2]) and " " in d2:
                     coordinates = {"0": (0+1, 0+1),
                                    "1": (1+1, 1+1),
                                    "2": (2+1, 2+1)}
@@ -132,24 +133,80 @@ class TicTacToe:
                     step = coordinates[str(d1.index(" "))]
 
             if step:
-                print(step)
-                print(type(step))
                 self.grid[step[0] - 1][step[1] - 1] = self.curr_player_sign
                 self.print_grid()
                 print("Making move level \"%s\"" % self.mode)
-
-
-            # try to block user steps if nothing.
-
             else:
                 easy()
 
         def hard():
-            medium()
+            best_step = ""
+            print("current sign is:", self.curr_player_sign)
+            columns = tuple(zip(self.grid[0], self.grid[1], self.grid[2]))
+            # diagonals
+            d1 = (self.grid[0][2], self.grid[1][1], self.grid[2][0])
+            d2 = (self.grid[0][0], self.grid[1][1], self.grid[2][2])
+            step = ""
+
+            # win or block strategy
+
+            for i in range(3) or step == "":
+                # row win or block
+                if self.grid[i].count(self.curr_player_sign) == 2 and " " in self.grid[i]:
+                    step = (i + 1, self.grid[i].index(' ') + 1)
+
+                # column win or block
+                elif columns[i].count(self.curr_player_sign) == 2 and " " in columns[i]:
+                    step = (columns[i].index(' ') + 1, i + 1)
+
+                # diagonal win or block
+                elif d2.count(self.curr_player_sign) == 2 and " " in d2:
+                    coordinates = {"0": (0+1, 0+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 2+1)}
+
+                    step = coordinates[str(d2.index(" "))]
+
+                elif d1.count(self.curr_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 2+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 0+1)}
+
+                    step = coordinates[str(d1.index(" "))]
+
+                elif self.grid[i].count(self.next_player_sign) == 2 and " " in self.grid[i]:
+                    step = (i + 1, self.grid[i].index(' ') + 1)
+
+                # column win or block
+                elif columns[i].count(self.next_player_sign) == 2 and " " in columns[i]:
+                    step = (columns[i].index(' ') + 1, i + 1)
+
+                # diagonal win or block
+                elif d2.count(self.next_player_sign) == 2 and " " in d2:
+                    coordinates = {"0": (0+1, 0+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 2+1)}
+
+                    step = coordinates[str(d2.index(" "))]
+
+                elif d1.count(self.next_player_sign) == 2 and " " in d1:
+                    coordinates = {"0": (0+1, 2+1),
+                                   "1": (1+1, 1+1),
+                                   "2": (2+1, 0+1)}
+
+                    step = coordinates[str(d1.index(" "))]
+
+            if step:
+                self.grid[step[0] - 1][step[1] - 1] = self.curr_player_sign
+                self.print_grid()
+                print("Making move level \"%s\"" % self.mode)
+            else:
+                easy()
+
+
 
         if self.mode == 'easy':
             easy()
-
         elif self.mode == 'medium':
             medium()
         else:
@@ -171,13 +228,13 @@ class TicTacToe:
                 self.top[2] == self.mid[1] == self.bot[0] != " ",  # main diagonal
                 self.top[0] == self.mid[1] == self.bot[2] != " ",  # second diagonal
                 ]):
-            print(f"{self.curr_player_sign} wins")
+            print(f"{self.curr_player_sign} wins")  # winner
             self.state = "Finished"
             return main()
 
         elif empty_cells < 1:  # at least 1 move left  # issue is here, DRAW function is not working
             print("Draw")
-            self.state = "Finished"
+            self.state = "Draw"
             return main()
 
     def gameplay(self):
@@ -195,7 +252,7 @@ def main():
     while True:
         game = TicTacToe.from_string()
         game.print_grid()  # print 1st clear grid/field
-        while game.state != "Finished":
+        while game.state not in frozenset({"Finished", "Draw"}):
             game.gameplay()
 
 

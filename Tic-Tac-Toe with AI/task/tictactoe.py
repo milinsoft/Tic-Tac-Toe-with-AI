@@ -97,34 +97,27 @@ class TicTacToe:
         def medium():
             print("current sign is:", self.curr_player_sign)
             columns = list(zip(self.grid[0], self.grid[1], self.grid[2]))
+            # diagonals
+            d1 = [self.grid[0][2], self.grid[1][1], self.grid[2][0]]
+            d2 = [self.grid[0][0], self.grid[1][1], self.grid[2][2]]
             step = ""
+
+            # win or block strategy
+
             # try to match rows, columns and diagonals
-            for i in range(3):
-                # row
-                if self.grid[i].count(self.curr_player_sign) == 2 and " " in self.grid[i]:
+            for i in range(3) or step == "":
+                # row win or block
+                if any([self.grid[i].count(self.curr_player_sign) == 2, self.grid[i].count(self.next_player_sign) == 2]) and " " in self.grid[i]:
                     step = (i + 1, self.grid[i].index(' ') + 1)
-                    break
-                # row blocker
-                elif self.grid[i].count(self.next_player_sign) == 2 and " " in self.grid[i]:
-                    step = (i + 1, self.grid[i].index(' ') + 1)
-                    break
-                # column
-                elif columns[i].count(self.curr_player_sign) == 2 and " " in columns[i]:
+                    #break
+                # column win or block
+                elif any([columns[i].count(self.curr_player_sign) == 2, columns[i].count(self.next_player_sign) == 2]) and " " in columns[i]:
                     step = (columns[i].index(' ') + 1, i + 1)
-                    break
-                # column blocker
-                elif columns[i].count(self.next_player_sign) == 2 and " " in columns[i]:
-                    step = (columns[i].index(' ') + 1, i + 1)
-                    break
+                    #break
 
-                #diagonal
+                # diagonal win or block
 
-                d2 = [self.grid[0][0], self.grid[1][1], self.grid[2][2]]
-                d1 = [self.grid[0][2], self.grid[1][1], self.grid[2][0]]
-
-                # try with manual binding in d1 and d2 cases using if-else
-
-                if d2.count(self.curr_player_sign) == 2 and " " in d1:
+                if d2.count(self.curr_player_sign) == 2 and " " in d2:
                     coordinates = {"0": (0+1, 0+1),
                                    "1": (1+1, 1+1),
                                    "2": (2+1, 2+1)}
@@ -141,7 +134,7 @@ class TicTacToe:
 
                 # diagonal blocking
 
-                elif d2.count(self.next_player_sign) == 2 and " " in d1:
+                elif d2.count(self.next_player_sign) == 2 and " " in d2:
                     coordinates = {"0": (0+1, 0+1),
                                    "1": (1+1, 1+1),
                                    "2": (2+1, 2+1)}

@@ -87,10 +87,14 @@ class TicTacToe:
             self.user_move()
 
     def mini_max(self):
-        ...
+        depth = 0
+        # depth will be increased if terminal stage will not be found from the step 1
+        # -10 for loss, + 10 for win , 0 for Draw.
+        # hard_AI vs hard_AI game always result in Draw
 
 
     def computer_move(self):
+
         def easy():
             steps_set = [(row + 1, cell + 1) for row in range(3) for cell in range(3) if self.grid[row][cell] == " "]
             random_step = choice(steps_set)
@@ -119,16 +123,16 @@ class TicTacToe:
 
                 # diagonal win or block
                 elif any([d2.count(self.curr_player_sign) == 2, d2.count(self.next_player_sign) == 2]) and " " in d2:
-                    coordinates = {"0": (0+1, 0+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 2+1)}
+                    coordinates = {"0": (1, 1),
+                                   "1": (2, 2),
+                                   "2": (3, 3)}
 
                     step = coordinates[str(d2.index(" "))]
 
                 elif any([d1.count(self.curr_player_sign) == 2, d1.count(self.next_player_sign) == 2]) and " " in d1:
-                    coordinates = {"0": (0+1, 2+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 0+1)}
+                    coordinates = {"0": (1, 3),
+                                   "1": (2, 2),
+                                   "2": (3, 1)}
 
                     step = coordinates[str(d1.index(" "))]
 
@@ -140,70 +144,11 @@ class TicTacToe:
                 easy()
 
         def hard():
+            # check if there is a terminal stage occured
             best_step = ""
-            print("current sign is:", self.curr_player_sign)
-            columns = tuple(zip(self.grid[0], self.grid[1], self.grid[2]))
-            # diagonals
-            d1 = (self.grid[0][2], self.grid[1][1], self.grid[2][0])
-            d2 = (self.grid[0][0], self.grid[1][1], self.grid[2][2])
-            step = ""
-
-            # win or block strategy
-
-            for i in range(3) or step == "":
-                # row win or block
-                if self.grid[i].count(self.curr_player_sign) == 2 and " " in self.grid[i]:
-                    step = (i + 1, self.grid[i].index(' ') + 1)
-
-                # column win or block
-                elif columns[i].count(self.curr_player_sign) == 2 and " " in columns[i]:
-                    step = (columns[i].index(' ') + 1, i + 1)
-
-                # diagonal win or block
-                elif d2.count(self.curr_player_sign) == 2 and " " in d2:
-                    coordinates = {"0": (0+1, 0+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 2+1)}
-
-                    step = coordinates[str(d2.index(" "))]
-
-                elif d1.count(self.curr_player_sign) == 2 and " " in d1:
-                    coordinates = {"0": (0+1, 2+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 0+1)}
-
-                    step = coordinates[str(d1.index(" "))]
-
-                elif self.grid[i].count(self.next_player_sign) == 2 and " " in self.grid[i]:
-                    step = (i + 1, self.grid[i].index(' ') + 1)
-
-                # column win or block
-                elif columns[i].count(self.next_player_sign) == 2 and " " in columns[i]:
-                    step = (columns[i].index(' ') + 1, i + 1)
-
-                # diagonal win or block
-                elif d2.count(self.next_player_sign) == 2 and " " in d2:
-                    coordinates = {"0": (0+1, 0+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 2+1)}
-
-                    step = coordinates[str(d2.index(" "))]
-
-                elif d1.count(self.next_player_sign) == 2 and " " in d1:
-                    coordinates = {"0": (0+1, 2+1),
-                                   "1": (1+1, 1+1),
-                                   "2": (2+1, 0+1)}
-
-                    step = coordinates[str(d1.index(" "))]
-
-            if step:
-                self.grid[step[0] - 1][step[1] - 1] = self.curr_player_sign
-                self.print_grid()
-                print("Making move level \"%s\"" % self.mode)
-            else:
-                easy()
-
-
+            print("Minimax shows the following:")
+            self.mini_max()
+            exit()
 
         if self.mode == 'easy':
             easy()

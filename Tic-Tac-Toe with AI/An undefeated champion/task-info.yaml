@@ -346,34 +346,23 @@ feedback_link: https://hyperskill.org/learn/step/7443#comment
 status: Failed
 feedback:
   message: |-
-    Wrong answer in test #178
+    Wrong answer in test #179
 
-    Your minimax algorithm is wrong! It chooses wrong positions to make a move!
+    The result of the game between minimax algorithms should be always 'Draw'!
+    Make sure your output contains 'Draw'.
 
     Please find below the output of your program during this failed test.
     Note that the '>' character indicates the beginning of the input line.
 
     ---
 
-    Input command: > start user hard
+    Input command: > start hard hard
     ---------
     |       |
     |       |
     |       |
     ---------
-    Enter the coordinates: > 1 1
-    ---------
-    | X     |
-    |       |
-    |       |
-    ---------
-    current sign is: O
-    ---------
-    | X   O |
-    |       |
-    |       |
-    ---------
-    Making move level "hard"
-    Enter the coordinates:
-  time: Wed, 05 Jan 2022 15:50:08 UTC
+    Minimax shows the following:
+    test
+  time: Fri, 14 Jan 2022 10:25:27 UTC
 record: 5

@@ -9,22 +9,31 @@ from grid import TicTacToeGrid
 # j -- column
 
 class TicTacToeGame:
-    def __init__(self, player1, player2, grid):
-        self.player1 = player1
-        self.player2 = player2
-        self.grid = grid
 
-        player1.grid = self.grid
-        player2.grid = self.grid
+    grid = TicTacToeGrid()
+
+
+    def __init__(self, player1, player2):
+        self.player1 = player1
+
+        self.player2 = player2
+
+        self.player1.grid = self.grid
+        self.player2.grid = self.grid
 
         self.curr_player = player1
-        self.next_player = player2
 
         self.state = "In progress"
 
 
+
+
+
     @classmethod
     def from_string(cls):
+        # ideally this function must initilise the game with 3 objects (2 players and 1 grid)
+
+
         game_parameters = input("Input command: ")
         if game_parameters not in ("exit",
                                    "start easy user", "start medium user", "start hard user",
@@ -46,11 +55,8 @@ class TicTacToeGame:
 
             player_2 = assigner(game_parameters.split()[2], "O")  # because this is the second player
 
-            grid = TicTacToeGrid()
 
-
-
-            return cls(player_1, player_2, grid)
+            return cls(player_1, player_2)
 
     def game_rules_validation(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
@@ -106,9 +112,7 @@ class TicTacToeGame:
 
 
     def switch_player(self):
-        self.curr_player, self.next_player = self.next_player, self.curr_player
-
-        # try something like if self.curr_player = player1 if self.curr_player == player2 else player 2
+        self.curr_player = self.player1 if self.curr_player == self.player2 else self.player2
 
 
 

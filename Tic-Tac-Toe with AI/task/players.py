@@ -8,9 +8,8 @@ class Player(ABC):
         self.name = "Bot"
         self.sign = sign
         self.next_player_sign = "O" if self.sign == "X" else "X"
+        self.grid = None
         super().__init__()
-
-
 
     @abstractmethod
     def make_move(self):
@@ -19,10 +18,9 @@ class Player(ABC):
 
 class EasyBot(Player):
     def __init__(self, sign):
+        super().__init__(sign)
         self.sign = sign
         self.name = "easy"
-        self.next_player_sign = "O" if self.sign == "X" else "X"
-        # super().__init__(sign)
 
     def make_move(self):
         steps_set = [(row + 1, cell + 1) for row in range(3) for cell in range(3) if self.grid.grid[row][cell] == " "]
@@ -34,13 +32,12 @@ class EasyBot(Player):
 
 class MediumBot(EasyBot):
     def __init__(self, sign):
+        super().__init__(sign)
         self.name = "medium"
         self.sign = sign
-        self.next_player_sign = "O" if self.sign == "X" else "X"
 
     def make_move(self):
 
-        # print("current sign is:", self.sign)
         columns = tuple(zip(self.grid.grid[0], self.grid.grid[1], self.grid.grid[2]))
         # diagonals
         d1 = (self.grid.grid[0][0], self.grid.grid[1][1], self.grid.grid[2][2])
@@ -76,9 +73,6 @@ class MediumBot(EasyBot):
 
                 step = coordinates[str(d2.index(" "))]
 
-        print("Step is:", step)
-
-
         if step:
             self.grid.grid[step[0] - 1][step[1] - 1] = self.sign
             self.grid.print_grid()
@@ -88,35 +82,33 @@ class MediumBot(EasyBot):
             super().make_move()
 
 
-
 class HardBot:
-    pass
-
-
-class User:
-
     def __init__(self, sign):
-        self.name = "User"
+        super().__init__(sign)
+        self.name = "hard"
         self.sign = sign
 
+
+class User(Player):
+
+    def __init__(self, sign):
+        super().__init__(sign)
+        self.name = "User"
+        self.sign = sign
 
     def make_move(self):
 
         try:
             row, column = [int(x) - 1 for x in input("Enter the coordinates: ").split()]
 
-            # print(self.grid.grid)
-
-            # grid.grid resolves the issue with subscription
-            # exit()
-
             assert self.grid.grid[row][column] not in "XO"
-            self.grid.grid[row][column] = self.sign
-            self.grid.print_grid()
+
+            if any([row < 0, row > 2, column < 0, column > 2]):
+                raise IndexError
 
         except ValueError:
-            print("You should enter numbers!")
-            return self.self.make_move()
+            print("You should enter numbers from 1 to 3!")
+            return self.make_move()
 
         except IndexError:
             print("Coordinates should be from 1 to 3!")
@@ -124,3 +116,7 @@ class User:
         except AssertionError:
             print("This cell is occupied! Choose another one!")
             self.make_move()
+
+        else:
+            self.grid.grid[row][column] = self.sign
+            self.grid.print_grid()

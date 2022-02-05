@@ -67,7 +67,6 @@ class TicTacToeGame:
         self.game_rules_validation()
         self.switch_player()
 
-
     def current_state_analyzer(self):
         x_counter, o_counter = 0, 0
 

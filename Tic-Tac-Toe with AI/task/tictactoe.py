@@ -48,21 +48,21 @@ class TicTacToeGame:
 
         """ format [row][column], where column is a cell number in row"""
 
-        if any([self.game_board.top[0] == self.game_board.top[1] == self.game_board.top[2] != " ",  # top row
-                self.game_board.mid[0] == self.game_board.mid[1] == self.game_board.mid[2] != " ",  # middle row
-                self.game_board.bot[0] == self.game_board.bot[1] == self.game_board.bot[2] != " ",  # bottom row
-                self.game_board.top[0] == self.game_board.mid[0] == self.game_board.bot[0] != " ",  # left column
-                self.game_board.top[1] == self.game_board.mid[1] == self.game_board.bot[1] != " ",  # middle column
-                self.game_board.top[2] == self.game_board.mid[2] == self.game_board.bot[2] != " ",  # right column
-                self.game_board.top[2] == self.game_board.mid[1] == self.game_board.bot[0] != " ",  # main diagonal
-                self.game_board.top[0] == self.game_board.mid[1] == self.game_board.bot[2] != " ",  # second diagonal
+        if any([self.game_board.grid[0][0] == self.game_board.grid[0][1] == self.game_board.grid[0][2] != " ",  # top row
+                self.game_board.grid[1][0] == self.game_board.grid[1][1] == self.game_board.grid[1][2] != " ",  # middle row
+                self.game_board.grid[2][0] == self.game_board.grid[2][1] == self.game_board.grid[2][2] != " ",  # bottom row
+                self.game_board.grid[0][0] == self.game_board.grid[1][0] == self.game_board.grid[2][0] != " ",  # left column
+                self.game_board.grid[0][1] == self.game_board.grid[1][1] == self.game_board.grid[2][1] != " ",  # middle column
+                self.game_board.grid[0][2] == self.game_board.grid[1][2] == self.game_board.grid[2][2] != " ",  # right column
+                self.game_board.grid[0][2] == self.game_board.grid[1][1] == self.game_board.grid[2][0] != " ",  # main diagonal
+                self.game_board.grid[0][0] == self.game_board.grid[1][1] == self.game_board.grid[2][2] != " ",  # second diagonal
                 ]):
             print(f"{self.curr_player.sign} wins")  # winner
             self.game_state = "Finished"
 
             return main()
 
-        elif not bool(sum((self.game_board.top.count(" "), self.game_board.mid.count(" "), self.game_board.bot.count(" ")))):
+        elif not bool(sum((self.game_board.grid[0].count(" "), self.game_board.grid[1].count(" "), self.game_board.grid[2].count(" ")))):
             print("Draw")
             self.game_state = "Draw"
             return main()

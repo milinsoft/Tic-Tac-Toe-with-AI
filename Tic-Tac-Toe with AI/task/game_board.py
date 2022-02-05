@@ -3,7 +3,6 @@ class TicTacToeGameBoard:
     def __init__(self):
         self.grid = [[' ', ' ', ' '] for _ in range(3)]
 
-
     def print_grid(self):
         line = 9 * '-'
         print(f"{line}\n"

@@ -59,7 +59,6 @@ class MediumBot(EasyBot):
         self.name = "medium"
         self.sign = sign
 
-
     def make_move(self):
 
         columns = tuple(zip(self.game_board.grid[0], self.game_board.grid[1], self.game_board.grid[2]))
@@ -77,13 +76,11 @@ class MediumBot(EasyBot):
             # row win or block
             if any([self.game_board.grid[i].count(self.sign) == 2,
                     self.game_board.grid[i].count(self.next_player_sign) == 2]) and " " in self.game_board.grid[i]:
-                print("L82")
                 step = (i, self.game_board.grid[i].index(' '))
 
             # column win or block
             elif any([columns[i].count(self.sign) == 2,
                       columns[i].count(self.next_player_sign) == 2]) and " " in columns[i]:
-                print("MAKING STEP: L 87", (columns[i].index(' '), i))
                 step = (columns[i].index(' '), i)
 
             # diagonal win or block
@@ -91,14 +88,12 @@ class MediumBot(EasyBot):
                 coordinates = {"0": (0, 0),
                                "1": (1, 1),
                                "2": (2, 2)}
-                print("l96")
                 step = coordinates[str(d1.index(" "))]
 
             elif any([d2.count(self.sign) == 2, d2.count(self.next_player_sign) == 2]) and " " in d2:
                 coordinates = {"0": (0, 2),
                                "1": (1, 1),
                                "2": (2, 0)}
-                print("L103")
                 step = coordinates[str(d2.index(" "))]
 
         if step:

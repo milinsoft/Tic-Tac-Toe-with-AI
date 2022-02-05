@@ -10,8 +10,6 @@ class User:
         self.next_player_sign = "O" if self.sign == "X" else "X"
 
     def occupy_cell(self, row, column):
-        #
-        # terminology: i -- row, j -- column
         self.game_board.grid[row][column] = self.sign
         self.game_board.print_grid()
 
@@ -19,9 +17,7 @@ class User:
 
         try:
             row, column = [int(x) - 1 for x in input("Enter the coordinates: ").split()]
-
             assert self.game_board.grid[row][column] == " "
-
             if any([row < 0, row > 2, column < 0, column > 2]):
                 raise IndexError
 

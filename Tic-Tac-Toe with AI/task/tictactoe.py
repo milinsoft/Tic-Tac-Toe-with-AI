@@ -63,12 +63,10 @@ class TicTacToeGame:
             return main()
 
     def gameplay(self):
-        self.player1.make_move()
+        self.curr_player.make_move()
         self.game_rules_validation()
         self.switch_player()
-        self.player2.make_move()
-        self.game_rules_validation()
-        self.switch_player()
+
 
     def current_state_analyzer(self):
         x_counter, o_counter = 0, 0

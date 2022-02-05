@@ -1,38 +1,19 @@
-from players import EasyBot, MediumBot, HardBot, User
-from grid import TicTacToeGrid
+from game_board import TicTacToeGameBoard
+from players import EasyBot, MediumBot, User
 
-
-
-
-# terminology:
-# i -- row
-# j -- column
 
 class TicTacToeGame:
 
-    grid = TicTacToeGrid()
-
-
-    def __init__(self, player1, player2):
+    def __init__(self, game_board, player1, player2):
+        self.game_board = game_board
         self.player1 = player1
-
         self.player2 = player2
-
-        self.player1.grid = self.grid
-        self.player2.grid = self.grid
-
         self.curr_player = player1
+        self.game_state = "In progress"
 
-        self.state = "In progress"
-
-
-
-
-
-    @classmethod
-    def from_string(cls):
-        # ideally this function must initilise the game with 3 objects (2 players and 1 grid)
-
+    @staticmethod
+    def add_players(game_game_board):
+        # ideally this function must initilise the game with 3 objects (2 players and 1 self.game_board)
 
         game_parameters = input("Input command: ")
         if game_parameters not in ("exit",
@@ -43,113 +24,92 @@ class TicTacToeGame:
 
             print("Bad parameters!")
 
-            return TicTacToeGame.from_string()
+            return TicTacToeGame.add_players(game_game_board)
         elif game_parameters == "exit":
             exit()
         else:
             def assigner(player, sign):
-                return {"easy": EasyBot(sign), "medium": MediumBot(sign), "user": User(sign)}[player]
-
+                return {"easy": EasyBot(sign, game_game_board), "medium": MediumBot(sign, game_game_board),
+                        "user": User(sign, game_game_board)}[player]
 
             player_1 = assigner(game_parameters.split()[1], "X")
 
             player_2 = assigner(game_parameters.split()[2], "O")  # because this is the second player
 
-
-            return cls(player_1, player_2)
+            return player_1, player_2
 
     def game_rules_validation(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
             The fist who will put own sign 3 time in row, column or horizontally - wins.
             In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
         """
-        empty_cells = sum((self.grid.top.count(" "), self.grid.mid.count(" "), self.grid.bot.count(" ")))
 
-        if any([self.grid.top[0] == self.grid.top[1] == self.grid.top[2] != " ",  # top row
-                self.grid.mid[0] == self.grid.mid[1] == self.grid.mid[2] != " ",  # middle row
-                self.grid.bot[0] == self.grid.bot[1] == self.grid.bot[2] != " ",  # bottom row
-                self.grid.top[0] == self.grid.mid[0] == self.grid.bot[0] != " ",  # left column
-                self.grid.top[1] == self.grid.mid[1] == self.grid.bot[1] != " ",  # middle column
-                self.grid.top[2] == self.grid.mid[2] == self.grid.bot[2] != " ",  # right column
-                self.grid.top[2] == self.grid.mid[1] == self.grid.bot[0] != " ",  # main diagonal
-                self.grid.top[0] == self.grid.mid[1] == self.grid.bot[2] != " ",  # second diagonal
+        # try self.curr_player.sign * 3 in [ list of combinations] -> bool
+
+        """ format [row][column], where column is a cell number in row"""
+
+        if any([self.game_board.top[0] == self.game_board.top[1] == self.game_board.top[2] != " ",  # top row
+                self.game_board.mid[0] == self.game_board.mid[1] == self.game_board.mid[2] != " ",  # middle row
+                self.game_board.bot[0] == self.game_board.bot[1] == self.game_board.bot[2] != " ",  # bottom row
+                self.game_board.top[0] == self.game_board.mid[0] == self.game_board.bot[0] != " ",  # left column
+                self.game_board.top[1] == self.game_board.mid[1] == self.game_board.bot[1] != " ",  # middle column
+                self.game_board.top[2] == self.game_board.mid[2] == self.game_board.bot[2] != " ",  # right column
+                self.game_board.top[2] == self.game_board.mid[1] == self.game_board.bot[0] != " ",  # main diagonal
+                self.game_board.top[0] == self.game_board.mid[1] == self.game_board.bot[2] != " ",  # second diagonal
                 ]):
             print(f"{self.curr_player.sign} wins")  # winner
-            self.state = "Finished"
+            self.game_state = "Finished"
+
             return main()
 
-        elif empty_cells < 1:  # at least 1 move left  # issue is here, DRAW function is not working
+        elif not bool(sum((self.game_board.top.count(" "), self.game_board.mid.count(" "), self.game_board.bot.count(" ")))):
             print("Draw")
-            self.state = "Draw"
+            self.game_state = "Draw"
             return main()
-
 
     def gameplay(self):
+
         self.player1.make_move()
         self.game_rules_validation()
         self.switch_player()
-
         self.player2.make_move()
         self.game_rules_validation()
         self.switch_player()
-        # play with "current player to save 2 lines"?
-
 
     def current_state_analyzer(self):
-        x_counter = 0
-        o_counter = 0
 
-        for i in range(3):
-            for n in range(3):
-                if self.grid[i][n] == "X":
+        # terminology: i -- row, j -- column
+
+        x_counter, o_counter = 0, 0
+
+        for j in range(3):
+            for i in range(3):
+                if self.game_board[j][i] == "X":
                     x_counter += 1
-                elif self.grid[i][n] == "O":
+                elif self.game_board[j][i] == "O":
                     o_counter += 1
 
         if x_counter > o_counter:
             self.switch_player()
         self.game_rules_validation()
 
-
     def switch_player(self):
         self.curr_player = self.player1 if self.curr_player == self.player2 else self.player2
 
 
-
-
-
 def main():
+    game_board = TicTacToeGameBoard()
+
+    player1, player2 = TicTacToeGame.add_players(game_board)
+
+    game = TicTacToeGame(game_board, player1, player2)
 
     while True:
-        game = TicTacToeGame.from_string()
 
-        game.grid.print_grid()  # print 1st clear grid/field
-        while game.state not in frozenset({"Finished", "Draw"}):
+        game.game_board.print_grid()  # print 1st clear self.game_board/field
+        while game.game_state not in frozenset({"Finished", "Draw"}):
             game.gameplay()
-
-
-
-
-def test():
-    game = TicTacToeGame.from_string()
-    print("Player1 name:", game.player1.name,
-          "\nPlayer 1 sign:", game.player1.sign)
-
-    print()
-
-    print("Player2 name:", game.player2.name,
-          "\nPlayer 2 sign:", game.player2.sign)
-
-    print("\nInitial Grid:\n")
-    game.grid.print_grid()
-
 
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-

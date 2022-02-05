@@ -1,19 +1,18 @@
-class TicTacToeGrid:
+class TicTacToeGameBoard:
 
     def __init__(self):
         self.grid = [[' ', ' ', ' '] for _ in range(3)]
-        self.state = "in process"
 
     @property
-    def top(self):
+    def top(self) -> list:
         return self.grid[0]
 
     @property
-    def mid(self):
+    def mid(self) -> list:
         return self.grid[1]
 
     @property
-    def bot(self):
+    def bot(self) -> list:
         return self.grid[2]
 
     def print_grid(self):
@@ -24,3 +23,4 @@ class TicTacToeGrid:
               f"| {' '.join(self.bot)} |\n"
               f"{line}"
               )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
+

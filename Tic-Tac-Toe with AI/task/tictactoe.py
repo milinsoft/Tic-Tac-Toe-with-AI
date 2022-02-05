@@ -44,25 +44,22 @@ class TicTacToeGame:
             In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
         """
 
-        arr = [(row for row in self.game_board.grid),  # all three rows
-               [self.game_board.grid[0][0], self.game_board.grid[1][0], self.game_board.grid[2][0]],  # left column
-               [self.game_board.grid[0][1], self.game_board.grid[1][1], self.game_board.grid[2][1]],  # middle column
-               [self.game_board.grid[0][2], self.game_board.grid[1][2], self.game_board.grid[2][2]],  # right column
-               [self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0]],  # main diagonal
-               [self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2]],  # second diagonal
-               ]
-
-        if [self.curr_player.sign] * 3 in arr:
-
-            print(f"{self.curr_player.sign} wins")  # winner
+        if [self.curr_player.sign] * 3 in (
+                self.game_board.grid,  # all three rows
+                [self.game_board.grid[0][0], self.game_board.grid[1][0], self.game_board.grid[2][0]],  # left column
+                [self.game_board.grid[0][1], self.game_board.grid[1][1], self.game_board.grid[2][1]],  # middle column
+                [self.game_board.grid[0][2], self.game_board.grid[1][2], self.game_board.grid[2][2]],  # right column
+                [self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0]],  # main diagonal
+                [self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2]],  # second diagonal
+        ):
             self.game_state = "Finished"
-
+            print(f"{self.curr_player.sign} wins")  # winner
             return main()
 
         elif not bool(sum((self.game_board.grid[0].count(" "), self.game_board.grid[1].count(" "),
                            self.game_board.grid[2].count(" ")))):
-            print("Draw")
             self.game_state = "Draw"
+            print("Draw")
             return main()
 
     def gameplay(self):
@@ -74,9 +71,6 @@ class TicTacToeGame:
         self.switch_player()
 
     def current_state_analyzer(self):
-
-        # terminology: i -- row, j -- column
-
         x_counter, o_counter = 0, 0
 
         for j in range(3):
@@ -96,11 +90,8 @@ class TicTacToeGame:
 
 def main():
     game_board = TicTacToeGameBoard()
-
     player1, player2 = TicTacToeGame.add_players(game_board)
-
     game = TicTacToeGame(game_board, player1, player2)
-
     while True:
         game.game_board.print_grid()  # print 1st clear self.game_board/field
         while game.game_state == "In progress":

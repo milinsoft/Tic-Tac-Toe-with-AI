@@ -60,16 +60,13 @@ class MediumBot(EasyBot):
         self.sign = sign
 
     def make_move(self):
-
         columns = tuple(zip(self.game_board.grid[0], self.game_board.grid[1], self.game_board.grid[2]))
         # diagonals
         d1 = (self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2])
         d2 = (self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0])
-
         step = ""
 
         # win or block strategy
-
         for i in range(3) or step == "":
             """ i - column number
             self.game_board.grid[i].index(' ') - index of column in row i represented as 2D array."""

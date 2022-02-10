@@ -11,3 +11,13 @@ class TicTacToeGameBoard:
               f"| {' '.join(self.grid[2])} |\n"
               f"{line}"
               )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
+
+
+class TestBoard(TicTacToeGameBoard):
+
+    def __init__(self):
+        super().__init__()
+        self.grid = [["O", " ", "X"],
+                     ["X", " ", " "],
+                     ["X", "O", "O"],
+                     ]

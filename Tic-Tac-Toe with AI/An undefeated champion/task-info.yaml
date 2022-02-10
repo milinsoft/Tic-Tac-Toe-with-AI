@@ -480,27 +480,9 @@ files:
             ...
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/7443#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Exception in test #178
-
-    Traceback (most recent call last):
-      File "tictactoe.py", line 106, in <module>
-        main()
-      File "tictactoe.py", line 96, in main
-        player1, player2 = TicTacToeGame.add_players(game_board)
-      File "tictactoe.py", line 37, in add_players
-        player_2 = assigner(game_parameters.split()[2], "O")  # because this is the second player
-      File "tictactoe.py", line 32, in assigner
-        return {"easy": EasyBot(sign, game_game_board), "medium": MediumBot(sign, game_game_board),
-    KeyError: 'hard'
-
-    Please find below the output of your program during this failed test.
-    Note that the '>' character indicates the beginning of the input line.
-
-    ---
-
-    Input command: > start user hard
-  time: Sat, 05 Feb 2022 19:56:12 UTC
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
+    Academy</a> to continue learning.
+  time: Thu, 10 Feb 2022 13:03:01 UTC
 record: 5

@@ -296,15 +296,15 @@ files:
     if __name__ == '__main__':
         TicTacToeTests().run_tests()
   learner_created: false
-- name: players.py
+- name: game_board.py
   visible: true
   learner_created: true
-- name: game_board.py
+- name: players.py
   visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/7442#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: Sat, 05 Feb 2022 21:47:15 UTC
+  time: Thu, 10 Feb 2022 13:01:50 UTC
 record: 4

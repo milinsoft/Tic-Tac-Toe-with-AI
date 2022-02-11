@@ -342,23 +342,6 @@ files:
     if __name__ == '__main__':
         TicTacToeTests().run_tests()
   learner_created: false
-- name: game_board.py
-  visible: true
-  text: |
-    class TicTacToeGameBoard:
-
-        def __init__(self):
-            self.grid = [[' ', ' ', ' '] for _ in range(3)]
-
-        def print_grid(self):
-            line = 9 * '-'
-            print(f"{line}\n"
-                  f"| {' '.join(self.grid[0])} |\n"
-                  f"| {' '.join(self.grid[1])} |\n"
-                  f"| {' '.join(self.grid[2])} |\n"
-                  f"{line}"
-                  )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
-  learner_created: true
 - name: players.py
   visible: true
   text: |
@@ -484,5 +467,5 @@ status: Solved
 feedback:
   message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
     Academy</a> to continue learning.
-  time: Fri, 11 Feb 2022 14:22:56 UTC
+  time: Fri, 11 Feb 2022 14:30:27 UTC
 record: 5

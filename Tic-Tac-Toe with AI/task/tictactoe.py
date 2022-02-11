@@ -155,56 +155,41 @@ class HardBot(MediumBot):
                                self.game_board[2].count(" "))
                               )
 
-        # if terminal state is not possible (more than 3 cells are empty) - play as MediumBot
-        if empty_cells_sum > 500:  # 5 - means at least 4 signs placed
-            super().make_move()
+        move_scores = dict()
+        print("Not yet implemented")
+        pseudo_game = self.create_sand_game()
 
-        else:
-            move_scores = dict()
-            # print("Not yet implemented")
-            pseudo_game = self.create_sand_game()
+        my_sign = self.sign
 
-            my_sign = self.sign
+        empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
 
-            empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
+        print("The following cells are empty:", empty_cells_coordinates)
+        depth = 0
 
-            print("The following cells are empty:", empty_cells_coordinates)
-            depth = 0
+        for move in empty_cells_coordinates:
+            pseudo_game.curr_player.occupy_cell(*move)
+            status = self.get_game_state()
 
-            for move in empty_cells_coordinates:
-                pseudo_game.curr_player.occupy_cell(*move)
-                status = self.get_game_state()
+            # split it for two players?
 
-                # split it for two players?
+            if status == "Finished":
+                score = 10 if pseudo_game.curr_player.sign == my_sign else -10
+                move_scores[move] = (score, depth)
 
-                if status == "Finished":
-                    score = 10 if pseudo_game.curr_player.sign == my_sign else -10
-                    move_scores[move] = (score, depth)
+            elif status == "Draw":
+                # need to use the most deepest step here (not yet implemented)
+                score = 0
+                move_scores[move] = (score, depth)
 
-                elif status == "Draw":
-                    # need to use the most deepest step here (not yet implemented)
-                    score = 0
-                    move_scores[move] = (score, depth)
-                    # return self.occupy_cell(*move)
-
-
-                else:  # game is still in progress
-                    depth += 1
-                    pseudo_game.switch_player()
-                    pseudo_game.curr_player.make_move()
+            else:  # game is still in progress
+                depth += 1
+                pseudo_game.switch_player()
+                pseudo_game.curr_player.make_move()
 
 
-                print("depth is:", depth)
-
-            move_scores = sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True)
-            print("all steps calculated")
-            print(move_scores)
-
-
-            #move_scores = sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True)
-            best_move = move_scores[0][0]
-            return self.occupy_cell(*best_move)
-            # exit()
+        move_scores = sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True)
+        best_move = move_scores[0][0]
+        return self.occupy_cell(*best_move)
 
 
 class TicTacToeGame:

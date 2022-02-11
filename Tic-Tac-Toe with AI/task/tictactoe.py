@@ -2,7 +2,7 @@ import re
 from copy import copy
 from random import choice
 
-from game_board import TicTacToeGameBoard
+
 
 
 class User:
@@ -14,12 +14,12 @@ class User:
         self.next_player_sign = "O" if self.sign == "X" else "X"
 
     def occupy_cell(self, row, column):
-        self.game_board.grid[row][column] = self.sign
+        self.game_board[row][column] = self.sign
 
     def make_move(self):
         try:
             row, column = [int(x) - 1 for x in input("Enter the coordinates: ").split()]
-            assert self.game_board.grid[row][column] == " "
+            assert self.game_board[row][column] == " "
             if any([row < 0, row > 2, column < 0, column > 2]):
                 raise IndexError
 
@@ -37,7 +37,6 @@ class User:
         else:
             self.occupy_cell(row, column)
 
-
     def get_game_state(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
             The fist who will put own sign 3 time in row, column or horizontally - wins.
@@ -45,19 +44,29 @@ class User:
         """
 
         if [self.sign] * 3 in (
-                self.game_board.grid,  # all three rows
-                [self.game_board.grid[0][0], self.game_board.grid[1][0], self.game_board.grid[2][0]],  # left column
-                [self.game_board.grid[0][1], self.game_board.grid[1][1], self.game_board.grid[2][1]],  # middle column
-                [self.game_board.grid[0][2], self.game_board.grid[1][2], self.game_board.grid[2][2]],  # right column
-                [self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0]],  # main diagonal
-                [self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2]],  # second diagonal
+                self.game_board,  # all three rows
+                [self.game_board[0][0], self.game_board[1][0], self.game_board[2][0]],  # left column
+                [self.game_board[0][1], self.game_board[1][1], self.game_board[2][1]],  # middle column
+                [self.game_board[0][2], self.game_board[1][2], self.game_board[2][2]],  # right column
+                [self.game_board[0][2], self.game_board[1][1], self.game_board[2][0]],  # main diagonal
+                [self.game_board[0][0], self.game_board[1][1], self.game_board[2][2]],  # second diagonal
         ):
             return "Finished"
 
-        elif not bool(sum((self.game_board.grid[0].count(" "), self.game_board.grid[1].count(" "),
-                           self.game_board.grid[2].count(" ")))):
+        elif not bool(sum((self.game_board[0].count(" "), self.game_board[1].count(" "),
+                           self.game_board[2].count(" ")))):
             return "Draw"
         return "In progress"
+
+    def print_grid(self):
+        line = 9 * '-'
+        print(f"{line}\n"
+              f"| {' '.join(self.game_board[0])} |\n"
+              f"| {' '.join(self.game_board[1])} |\n"
+              f"| {' '.join(self.game_board[2])} |\n"
+              f"{line}"
+              )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
+
 
 
 class EasyBot(User):
@@ -66,12 +75,9 @@ class EasyBot(User):
         self.name = "easy"
         self.sign = sign
 
-    def occupy_cell(self, j, i):
-        super().occupy_cell(j, i)
-
     def make_move(self):
         steps_set = [(i, j) for i in range(3) for j in range(3) if
-                     self.game_board.grid[i][j] == " "]
+                     self.game_board[i][j] == " "]
         random_step = choice(steps_set)
         self.occupy_cell(*random_step)
 
@@ -83,20 +89,20 @@ class MediumBot(EasyBot):
         self.sign = sign
 
     def make_move(self):
-        columns = tuple(zip(self.game_board.grid[0], self.game_board.grid[1], self.game_board.grid[2]))
+        columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
         # diagonals
-        d1 = (self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2])
-        d2 = (self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0])
+        d1 = (self.game_board[0][0], self.game_board[1][1], self.game_board[2][2])
+        d2 = (self.game_board[0][2], self.game_board[1][1], self.game_board[2][0])
         step = ""
 
         # win or block strategy
         for i in range(3) or step == "":
             """ i - column number
-            self.game_board.grid[i].index(' ') - index of column in row i represented as 2D array."""
+            self.game_board[i].index(' ') - index of column in row i represented as 2D array."""
             # row win or block
-            if any([self.game_board.grid[i].count(self.sign) == 2,
-                    self.game_board.grid[i].count(self.next_player_sign) == 2]) and " " in self.game_board.grid[i]:
-                step = (i, self.game_board.grid[i].index(' '))
+            if any([self.game_board[i].count(self.sign) == 2,
+                    self.game_board[i].count(self.next_player_sign) == 2]) and " " in self.game_board[i]:
+                step = (i, self.game_board[i].index(' '))
 
             # column win or block
             elif any([columns[i].count(self.sign) == 2,
@@ -144,9 +150,9 @@ class HardBot(MediumBot):
         return TicTacToeGame(me, opponent)
 
     def make_move(self):
-        empty_cells_sum = sum((self.game_board.grid[0].count(" "),
-                               self.game_board.grid[1].count(" "),
-                               self.game_board.grid[2].count(" "))
+        empty_cells_sum = sum((self.game_board[0].count(" "),
+                               self.game_board[1].count(" "),
+                               self.game_board[2].count(" "))
                               )
 
         # if terminal state is not possible (more than 3 cells are empty) - play as MediumBot
@@ -160,7 +166,7 @@ class HardBot(MediumBot):
 
             my_sign = self.sign
 
-            empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board.grid[i][j] == " "]
+            empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
 
             print("The following cells are empty:", empty_cells_coordinates)
             depth = 0
@@ -214,7 +220,8 @@ class TicTacToeGame:
 
     @classmethod
     def add_players(cls):
-        game_board = TicTacToeGameBoard()
+        game_board = [[' ', ' ', ' '] for _ in range(3)]
+        
         template = re.compile("exit|start( (user|easy|medium|hard)){2}")
         game_parameters = input("Input command: ")
 
@@ -239,7 +246,7 @@ class TicTacToeGame:
             # think how to move it into "players" file and User class
             print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name != "User" else ""
 
-            self.curr_player.game_board.print_grid()
+            self.curr_player.print_grid()
             self.game_state = self.curr_player.get_game_state()
 
             if self.game_state == "Finished":
@@ -252,17 +259,8 @@ class TicTacToeGame:
 
 
 def main():
-    game_board = TicTacToeGameBoard()
-
-    # game_board = TestBoard()
-
     game = TicTacToeGame.add_players()
-    # game = TicTacToeGame(player1, player2)
-
-    # game = TicTacToeGame(game_board, HardBot("X", game_board), HardBot("O", game_board))
-
-    # game = TicTacToeGame(game_board, User("X", game_board), User("O", game_board))
-    game.player1.game_board.print_grid()  # print 1st clear self.game_board/field
+    game.player1.print_grid()  # print 1st clear self.game_board/field
     game.gameplay()
 
 

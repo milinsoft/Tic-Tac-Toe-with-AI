@@ -1,12 +1,14 @@
-from game_board import TicTacToeGameBoard, TestBoard
-from random import choice
+import re
 from copy import copy
+from random import choice
+
+from game_board import TicTacToeGameBoard
 
 
 class User:
 
     def __init__(self, sign, game_board):
-        self.name = "User"
+        self.name = "User"  # need this field for print the message Making move level
         self.sign = sign
         self.game_board = game_board
         self.next_player_sign = "O" if self.sign == "X" else "X"
@@ -36,11 +38,33 @@ class User:
             self.occupy_cell(row, column)
 
 
+    def get_game_state(self):
+        """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
+            The fist who will put own sign 3 time in row, column or horizontally - wins.
+            In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
+        """
+
+        if [self.sign] * 3 in (
+                self.game_board.grid,  # all three rows
+                [self.game_board.grid[0][0], self.game_board.grid[1][0], self.game_board.grid[2][0]],  # left column
+                [self.game_board.grid[0][1], self.game_board.grid[1][1], self.game_board.grid[2][1]],  # middle column
+                [self.game_board.grid[0][2], self.game_board.grid[1][2], self.game_board.grid[2][2]],  # right column
+                [self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0]],  # main diagonal
+                [self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2]],  # second diagonal
+        ):
+            return "Finished"
+
+        elif not bool(sum((self.game_board.grid[0].count(" "), self.game_board.grid[1].count(" "),
+                           self.game_board.grid[2].count(" ")))):
+            return "Draw"
+        return "In progress"
+
+
 class EasyBot(User):
     def __init__(self, sign, game_board):
         super().__init__(sign, game_board)
-        self.sign = sign
         self.name = "easy"
+        self.sign = sign
 
     def occupy_cell(self, j, i):
         super().occupy_cell(j, i)
@@ -112,8 +136,12 @@ class HardBot(MediumBot):
         # creating copy of this game to give to find the best move behind the scean
         sand_board = copy(self.game_board)
         me = HardBot(self.sign, sand_board)
+
+        me.game_board = sand_board
         opponent = HardBot(self.next_player_sign, sand_board)
-        return TicTacToeGame(sand_board, me, opponent)
+
+        opponent.game_board = sand_board
+        return TicTacToeGame(me, opponent)
 
     def make_move(self):
         empty_cells_sum = sum((self.game_board.grid[0].count(" "),
@@ -132,14 +160,14 @@ class HardBot(MediumBot):
 
             my_sign = self.sign
 
-            empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if pseudo_game.game_board.grid[i][j] == " "]
+            empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board.grid[i][j] == " "]
 
             print("The following cells are empty:", empty_cells_coordinates)
             depth = 0
 
             for move in empty_cells_coordinates:
                 pseudo_game.curr_player.occupy_cell(*move)
-                status = pseudo_game.get_game_state()
+                status = self.get_game_state()
 
                 # split it for two players?
 
@@ -175,61 +203,35 @@ class HardBot(MediumBot):
 
 class TicTacToeGame:
 
-    def __init__(self, game_board, player1, player2):
-        self.game_board = game_board
+    def __init__(self, player1, player2):
         self.player1 = player1
         self.player2 = player2
         self.curr_player = player1
         self.game_state = "In progress"
 
-    @staticmethod
-    def add_players(game_board):
-        # ideally this function must initilise the game with 3 objects (2 players and 1 self.game_board)
+    def switch_player(self):
+        self.curr_player = self.player1 if self.curr_player == self.player2 else self.player2
 
+    @classmethod
+    def add_players(cls):
+        game_board = TicTacToeGameBoard()
+        template = re.compile("exit|start( (user|easy|medium|hard)){2}")
         game_parameters = input("Input command: ")
-        if game_parameters not in ("exit",
-                                   "start easy user", "start medium user", "start hard user",
-                                   "start user easy", "start user medium", "start user hard",
-                                   "start user user",
-                                   "start easy easy", "start medium medium", "start hard hard"):
 
+        if not re.match(template, game_parameters):
             print("Bad parameters!")
+            return TicTacToeGame.add_players()
 
-            return TicTacToeGame.add_players(game_board)
         elif game_parameters == "exit":
             exit()
         else:
-            def assigner(player, sign):
-                return {"easy": EasyBot(sign, game_board), "medium": MediumBot(sign, game_board),
-                        "hard": HardBot(sign, game_board),
-                        "user": User(sign, game_board)}[player]
+            game_parameters = game_parameters.split()
 
-            player_1 = assigner(game_parameters.split()[1], "X")
+            modes = {"easy": EasyBot, "medium": MediumBot, "hard": HardBot, "user": User}
 
-            player_2 = assigner(game_parameters.split()[2], "O")  # because this is the second player
+            return cls(modes[game_parameters[1]]("X", game_board),
+                       modes[game_parameters[2]]("O", game_board))
 
-            return player_1, player_2
-
-    def get_game_state(self):
-        """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
-            The fist who will put own sign 3 time in row, column or horizontally - wins.
-            In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
-        """
-
-        if [self.curr_player.sign] * 3 in (
-                self.game_board.grid,  # all three rows
-                [self.game_board.grid[0][0], self.game_board.grid[1][0], self.game_board.grid[2][0]],  # left column
-                [self.game_board.grid[0][1], self.game_board.grid[1][1], self.game_board.grid[2][1]],  # middle column
-                [self.game_board.grid[0][2], self.game_board.grid[1][2], self.game_board.grid[2][2]],  # right column
-                [self.game_board.grid[0][2], self.game_board.grid[1][1], self.game_board.grid[2][0]],  # main diagonal
-                [self.game_board.grid[0][0], self.game_board.grid[1][1], self.game_board.grid[2][2]],  # second diagonal
-        ):
-            return "Finished"
-
-        elif not bool(sum((self.game_board.grid[0].count(" "), self.game_board.grid[1].count(" "),
-                           self.game_board.grid[2].count(" ")))):
-            return "Draw"
-        return "In progress"
 
     def gameplay(self):
         while self.game_state == "In progress":
@@ -237,8 +239,8 @@ class TicTacToeGame:
             # think how to move it into "players" file and User class
             print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name != "User" else ""
 
-            self.game_board.print_grid()
-            self.game_state = self.get_game_state()
+            self.curr_player.game_board.print_grid()
+            self.game_state = self.curr_player.get_game_state()
 
             if self.game_state == "Finished":
                 print(f"{self.curr_player.sign} wins")  # winner
@@ -246,21 +248,7 @@ class TicTacToeGame:
                 print("Draw")
             self.switch_player()
 
-    def current_state_analyzer(self):
-        x_counter, o_counter = 0, 0
-        for j in range(3):
-            for i in range(3):
-                if self.game_board[j][i] == "X":
-                    x_counter += 1
-                elif self.game_board[j][i] == "O":
-                    o_counter += 1
 
-        if x_counter > o_counter:
-            self.switch_player()
-        self.get_game_state()
-
-    def switch_player(self):
-        self.curr_player = self.player1 if self.curr_player == self.player2 else self.player2
 
 
 def main():
@@ -268,13 +256,13 @@ def main():
 
     # game_board = TestBoard()
 
-    player1, player2 = TicTacToeGame.add_players(game_board)
-    game = TicTacToeGame(game_board, player1, player2)
+    game = TicTacToeGame.add_players()
+    # game = TicTacToeGame(player1, player2)
 
     # game = TicTacToeGame(game_board, HardBot("X", game_board), HardBot("O", game_board))
 
     # game = TicTacToeGame(game_board, User("X", game_board), User("O", game_board))
-    game.game_board.print_grid()  # print 1st clear self.game_board/field
+    game.player1.game_board.print_grid()  # print 1st clear self.game_board/field
     game.gameplay()
 
 

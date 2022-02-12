@@ -137,7 +137,6 @@ class HardBot(MediumBot):
         pass
 
 
-
     def minimax(self, depth) -> tuple:
         move_scores = dict()
         scores = {self.sign: 10, self.opponent_sign: -10, "Draw": 0}
@@ -150,6 +149,9 @@ class HardBot(MediumBot):
         empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
 
         for move in empty_cells_coordinates:
+
+            # what if evaluate only depth and who is winner, but assign points in sep fun?
+            # return depth - winner sign
 
             current_player.occupy_cell(*move)
             winner = self.get_winner()

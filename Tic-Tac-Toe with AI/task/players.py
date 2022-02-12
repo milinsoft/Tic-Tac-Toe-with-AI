@@ -133,13 +133,12 @@ class HardBot(MediumBot):
         self.sign = sign
 
 
-    def get_best_move(self):
+    def get_best_move(self, depth):
         pass
 
 
 
-
-    def minimax(self) -> tuple:
+    def minimax(self, depth) -> tuple:
         move_scores = dict()
         scores = {self.sign: 10, self.opponent_sign: -10, "Draw": 0}
 
@@ -148,13 +147,10 @@ class HardBot(MediumBot):
             HardBot(self.sign, fake_board), HardBot(self.opponent_sign, fake_board)
 
         current_player = simulated_player1
-
         empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
-        depth = 0
-
-        # create depth var in different fun
 
         for move in empty_cells_coordinates:
+
             current_player.occupy_cell(*move)
             winner = self.get_winner()
             # split it for two players?
@@ -163,19 +159,21 @@ class HardBot(MediumBot):
 
             # game is still in progress
             else:
-                depth += 1
                 current_player = simulated_player2 if current_player == simulated_player1 else simulated_player1
                 # important step, as otherwise next player will not seek for the best move
                 # but will start from the next availiable which will destroy the algorithm
-                current_player.make_move()
+                depth += 1
+                current_player.make_move(depth)
 
         # sorting putting highest score and lowest depth first
         move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], -x[1][1]), reverse=True))
-        print(move_scores)
+        # print(move_scores)
         return list(move_scores)[0]
 
-    def make_move(self):
+    def make_move(self, depth=0):
         if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
             return super().make_move()
-        best_move = self.minimax()
+
+
+        best_move = self.minimax(depth)
         return self.occupy_cell(*best_move)  # picking best move

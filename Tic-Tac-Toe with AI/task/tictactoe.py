@@ -37,10 +37,9 @@ class TicTacToeGame:
         while not self.winner:
             self.curr_player.make_move()
             # think how to move it into "players" file and User class
-            print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name != "User" else ""
+            print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name else ""
             self.curr_player.print_grid()
             self.winner = self.curr_player.get_winner()
-
             if self.winner:
                 print("Draw" if self.winner == "Draw" else f"{self.curr_player.sign} wins")
             else:

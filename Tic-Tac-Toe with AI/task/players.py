@@ -5,7 +5,7 @@ from random import choice
 class User:
 
     def __init__(self, sign, game_board):
-        self.name = "User"  # need this field for print the message Making move level
+        self.name = None  # need this field for print the message Making move level
         self.sign = sign
         self.game_board = game_board
         self.opponent_sign = "O" if self.sign == "X" else "X"
@@ -27,6 +27,7 @@ class User:
         except IndexError:
             print("Coordinates should be from 1 to 3!")
             return self.make_move()
+
         except AssertionError:
             print("This cell is occupied! Choose another one!")
             self.make_move()
@@ -34,7 +35,6 @@ class User:
         else:
             self.occupy_cell(row, column)
 
-    # or better "get winner?" replace game_state with - winner , default None
     def get_winner(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
             The fist who will put own sign 3 time in row, column or horizontally - wins.
@@ -56,12 +56,11 @@ class User:
             return "Draw"
 
     def print_grid(self):
-        line = 9 * '-'
-        print(f"{line}\n"
+        print(f"{9 * '-'}\n"
               f"| {' '.join(self.game_board[0])} |\n"
               f"| {' '.join(self.game_board[1])} |\n"
               f"| {' '.join(self.game_board[2])} |\n"
-              f"{line}"
+              f"{9 * '-'}"
               )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
 
 
@@ -72,8 +71,7 @@ class EasyBot(User):
         self.sign = sign
 
     def make_move(self):
-        steps_set = [(i, j) for i in range(3) for j in range(3) if
-                     self.game_board[i][j] == " "]
+        steps_set = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
         random_step = choice(steps_set)
         self.occupy_cell(*random_step)
 
@@ -134,38 +132,46 @@ class HardBot(MediumBot):
         self.name = "hard"
         self.sign = sign
 
+
+    def get_best_move(self):
+        pass
+
+
+
+
     def minimax(self) -> tuple:
-        original_board = self.game_board
-        fake_board = copy(original_board)
-
-        fake_player1 = HardBot(self.sign, fake_board)
-        fake_player2 = HardBot(self.opponent_sign, fake_board)
-
-        current_player = fake_player1
-
         move_scores = dict()
         scores = {self.sign: 10, self.opponent_sign: -10, "Draw": 0}
-        # pseudo_game = self.create_sand_game()
+
+        fake_board = copy(self.game_board)
+        simulated_player1, simulated_player2 =\
+            HardBot(self.sign, fake_board), HardBot(self.opponent_sign, fake_board)
+
+        current_player = simulated_player1
 
         empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
         depth = 0
+
+        # create depth var in different fun
 
         for move in empty_cells_coordinates:
             current_player.occupy_cell(*move)
             winner = self.get_winner()
             # split it for two players?
-
             if winner:
                 move_scores[move] = (scores[winner], depth)
 
-            else:  # game is still in progress
+            # game is still in progress
+            else:
                 depth += 1
-                current_player = fake_player2 if current_player == fake_player1 else fake_player1
+                current_player = simulated_player2 if current_player == simulated_player1 else simulated_player1
                 # important step, as otherwise next player will not seek for the best move
                 # but will start from the next availiable which will destroy the algorithm
                 current_player.make_move()
 
-        move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], -x[1][1]), reverse=True))  # sorting putting highest score and lowest depth first
+        # sorting putting highest score and lowest depth first
+        move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], -x[1][1]), reverse=True))
+        print(move_scores)
         return list(move_scores)[0]
 
     def make_move(self):

@@ -3,8 +3,6 @@ from copy import copy
 from random import choice
 
 
-
-
 class User:
 
     def __init__(self, sign, game_board):
@@ -37,7 +35,8 @@ class User:
         else:
             self.occupy_cell(row, column)
 
-    def get_game_state(self):
+    # or better "get winner?" replace game_state with - winner , default None
+    def get_winner(self):
         """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
             The fist who will put own sign 3 time in row, column or horizontally - wins.
             In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
@@ -51,12 +50,12 @@ class User:
                 [self.game_board[0][2], self.game_board[1][1], self.game_board[2][0]],  # main diagonal
                 [self.game_board[0][0], self.game_board[1][1], self.game_board[2][2]],  # second diagonal
         ):
-            return "Finished"
+            return self.sign
 
         elif not bool(sum((self.game_board[0].count(" "), self.game_board[1].count(" "),
                            self.game_board[2].count(" ")))):
             return "Draw"
-        return "In progress"
+        return None
 
     def print_grid(self):
         line = 9 * '-'
@@ -66,7 +65,6 @@ class User:
               f"| {' '.join(self.game_board[2])} |\n"
               f"{line}"
               )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
-
 
 
 class EasyBot(User):
@@ -89,6 +87,9 @@ class MediumBot(EasyBot):
         self.sign = sign
 
     def make_move(self):
+        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
+            return super().make_move()
+
         columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
         # diagonals
         d1 = (self.game_board[0][0], self.game_board[1][1], self.game_board[2][2])
@@ -150,46 +151,34 @@ class HardBot(MediumBot):
         return TicTacToeGame(me, opponent)
 
     def make_move(self):
-        empty_cells_sum = sum((self.game_board[0].count(" "),
-                               self.game_board[1].count(" "),
-                               self.game_board[2].count(" "))
-                              )
+        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
+            return super().make_move()
 
+        scores = {self.sign: 10, self.next_player_sign: -10, "Draw": 0}
         move_scores = dict()
-        print("Not yet implemented")
         pseudo_game = self.create_sand_game()
 
-        my_sign = self.sign
-
         empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
-
-        print("The following cells are empty:", empty_cells_coordinates)
         depth = 0
 
         for move in empty_cells_coordinates:
             pseudo_game.curr_player.occupy_cell(*move)
-            status = self.get_game_state()
+            winner = self.get_winner()
 
             # split it for two players?
-
-            if status == "Finished":
-                score = 10 if pseudo_game.curr_player.sign == my_sign else -10
-                move_scores[move] = (score, depth)
-
-            elif status == "Draw":
-                # need to use the most deepest step here (not yet implemented)
-                score = 0
-                move_scores[move] = (score, depth)
+            if winner:
+                move_scores[move] = (scores[winner], depth)
 
             else:  # game is still in progress
                 depth += 1
                 pseudo_game.switch_player()
                 pseudo_game.curr_player.make_move()
 
+        # re-write sorting!!!
+        print(move_scores)
+        move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True))
 
-        move_scores = sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True)
-        best_move = move_scores[0][0]
-        return self.occupy_cell(*best_move)
+        return self.occupy_cell(*list(move_scores)[0])  # picking best move
 
 
 class TicTacToeGame:
@@ -198,7 +187,7 @@ class TicTacToeGame:
         self.player1 = player1
         self.player2 = player2
         self.curr_player = player1
-        self.game_state = "In progress"
+        self.winner = None
 
     def switch_player(self):
         self.curr_player = self.player1 if self.curr_player == self.player2 else self.player2
@@ -218,29 +207,22 @@ class TicTacToeGame:
             exit()
         else:
             game_parameters = game_parameters.split()
-
             modes = {"easy": EasyBot, "medium": MediumBot, "hard": HardBot, "user": User}
-
             return cls(modes[game_parameters[1]]("X", game_board),
                        modes[game_parameters[2]]("O", game_board))
 
-
     def gameplay(self):
-        while self.game_state == "In progress":
+        while not self.winner:
             self.curr_player.make_move()
             # think how to move it into "players" file and User class
             print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name != "User" else ""
-
             self.curr_player.print_grid()
-            self.game_state = self.curr_player.get_game_state()
+            self.winner = self.curr_player.get_winner()
 
-            if self.game_state == "Finished":
-                print(f"{self.curr_player.sign} wins")  # winner
-            elif self.game_state == "Draw":
-                print("Draw")
-            self.switch_player()
-
-
+            if self.winner:
+                print("Draw" if self.winner == "Draw" else f"{self.curr_player.sign} wins")
+            else:
+                self.switch_player()
 
 
 def main():
@@ -248,9 +230,6 @@ def main():
     game.player1.print_grid()  # print 1st clear self.game_board/field
     game.gameplay()
 
-
 if __name__ == '__main__':
     main()
 
-
-# can remove board as an object of TicTacToeGame class and access through players

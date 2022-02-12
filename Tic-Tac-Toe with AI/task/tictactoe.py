@@ -43,7 +43,7 @@ class User:
         """
 
         if [self.sign] * 3 in (
-                (row for row in self.game_board),  # all three rows
+                self.game_board[0], self.game_board[1], self.game_board[2],  # all three rows
                 [self.game_board[0][0], self.game_board[1][0], self.game_board[2][0]],  # left column
                 [self.game_board[0][1], self.game_board[1][1], self.game_board[2][1]],  # middle column
                 [self.game_board[0][2], self.game_board[1][2], self.game_board[2][2]],  # right column

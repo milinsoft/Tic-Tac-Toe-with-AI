@@ -43,7 +43,7 @@ class User:
         """
 
         if [self.sign] * 3 in (
-                self.game_board,  # all three rows
+                (row for row in self.game_board),  # all three rows
                 [self.game_board[0][0], self.game_board[1][0], self.game_board[2][0]],  # left column
                 [self.game_board[0][1], self.game_board[1][1], self.game_board[2][1]],  # middle column
                 [self.game_board[0][2], self.game_board[1][2], self.game_board[2][2]],  # right column
@@ -137,25 +137,8 @@ class HardBot(MediumBot):
         self.sign = sign
 
     def minimax(self):
-        pass
-
-    def create_sand_game(self):
-        # creating copy of this game to give to find the best move behind the scean
-        sand_board = copy(self.game_board)
-        me = HardBot(self.sign, sand_board)
-
-        me.game_board = sand_board
-        opponent = HardBot(self.next_player_sign, sand_board)
-
-        opponent.game_board = sand_board
-        return TicTacToeGame(me, opponent)
-
-    def make_move(self):
-        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
-            return super().make_move()
-
-        scores = {self.sign: 10, self.next_player_sign: -10, "Draw": 0}
         move_scores = dict()
+        scores = {self.sign: 10, self.next_player_sign: -10, "Draw": 0}
         pseudo_game = self.create_sand_game()
 
         empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
@@ -174,11 +157,30 @@ class HardBot(MediumBot):
                 pseudo_game.switch_player()
                 pseudo_game.curr_player.make_move()
 
-        # re-write sorting!!!
-        print(move_scores)
+            # re-write sorting!!!
         move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True))
 
-        return self.occupy_cell(*list(move_scores)[0])  # picking best move
+        return list(move_scores)[0]
+
+
+
+    def create_sand_game(self):
+        # creating copy of this game to give to find the best move behind the scean
+        sand_board = copy(self.game_board)
+        me = HardBot(self.sign, sand_board)
+
+        me.game_board = sand_board
+        opponent = HardBot(self.next_player_sign, sand_board)
+
+        opponent.game_board = sand_board
+        return TicTacToeGame(me, opponent)
+
+    def make_move(self):
+        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
+            return super().make_move()
+
+        best_move = self.minimax()
+        return self.occupy_cell(*best_move)  # picking best move
 
 
 class TicTacToeGame:

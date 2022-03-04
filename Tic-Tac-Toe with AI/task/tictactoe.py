@@ -1,5 +1,13 @@
 import re
+
 from players import User, EasyBot, MediumBot, HardBot
+
+DRAW = "Draw"
+MODES = {"easy": EasyBot,
+         "medium": MediumBot,
+         "hard": HardBot,
+         "user": User,
+         }
 
 
 class TicTacToeGame:
@@ -28,27 +36,24 @@ class TicTacToeGame:
             exit()
         else:
             game_parameters = game_parameters.split()
-            modes = {"easy": EasyBot, "medium": MediumBot, "hard": HardBot, "user": User}
-            return cls(modes[game_parameters[1]]("X", game_board),
-                       modes[game_parameters[2]]("O", game_board))
+
+            return cls(MODES[game_parameters[1]]("X", game_board),
+                       MODES[game_parameters[2]]("O", game_board))
 
     def gameplay(self):
         self.player1.print_grid()  # print 1st clear self.game_board/field
         while not self.winner:
             self.curr_player.make_move()
-            print("Making move level \"%s\"" % self.curr_player.name) if self.curr_player.name else ""
+            if self.curr_player.name:
+                print(f'Making move level "{self.curr_player.name}"')
             self.curr_player.print_grid()
             self.winner = self.curr_player.get_winner()
             if self.winner:
-                print("Draw" if self.winner == "Draw" else f"{self.curr_player.sign} wins")
+                print(DRAW if self.winner == DRAW else f"{self.curr_player.sign} wins")
             else:
                 self.switch_player()
 
 
-def main():
+if __name__ == '__main__':
     game = TicTacToeGame.add_players()
     game.gameplay()
-
-
-if __name__ == '__main__':
-    main()

@@ -1,6 +1,8 @@
 from copy import copy
 from random import choice
 
+EMPTYBOARD = [[' ', ' ', ' '] for _ in range(3)]
+
 
 class User:
 
@@ -83,7 +85,7 @@ class MediumBot(EasyBot):
         self.sign = sign
 
     def make_move(self):
-        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
+        if self.game_board == EMPTYBOARD:  # all cells empty
             return super().make_move()
 
         columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
@@ -132,7 +134,6 @@ class HardBot(MediumBot):
         self.name = "hard"
         self.sign = sign
 
-
     def minimax(self, depth) -> tuple:
         move_scores = dict()
 
@@ -161,7 +162,7 @@ class HardBot(MediumBot):
         return list(move_scores)[0]
 
     def make_move(self, depth=0):
-        if self.game_board == [[' ', ' ', ' '] for _ in range(3)]:  # all cells empty
+        if self.game_board == EMPTYBOARD:  # all cells empty
             return super().make_move()
 
         best_move = self.minimax(depth)

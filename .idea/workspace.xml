@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2f458340-c9e8-40f5-bec9-6652b18aa070" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/task/players.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/task/players.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/course-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/course-remote-info.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +40,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RunManager" selected="Python.tictactoe">
     <configuration name="1ads" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -148,11 +149,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.testable" />
-      <item itemvalue="Python.tictactoe" />
       <item itemvalue="Python.1ads" />
       <item itemvalue="Python.o" />
       <item itemvalue="Python.test" />
+      <item itemvalue="Python.testable" />
+      <item itemvalue="Python.tictactoe" />
     </list>
     <recent_temporary>
       <list>

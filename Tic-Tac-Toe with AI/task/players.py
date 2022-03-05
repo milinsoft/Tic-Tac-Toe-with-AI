@@ -84,42 +84,43 @@ class MediumBot(EasyBot):
         self.name = "medium"
         self.sign = sign
 
+    def scan_diagonals(self) -> tuple:
+        diagonals = (
+            ((0, 0), (1, 1), (2, 2)),
+            ((0, 2), (1, 1), (2, 0)),
+        )
+
+        for diagonal in diagonals:
+            diagonal_symbols = [self.game_board[c[0]][c[1]] for c in diagonal]
+            if any([diagonal_symbols.count(self.sign) == 2, diagonal_symbols.count(self.opponent_sign) == 2]) and " " in diagonal_symbols:
+                empty_cell = diagonal_symbols.index(' ')
+                return diagonal[empty_cell]
+        return tuple()
+
     def make_move(self):
         if self.game_board == EMPTYBOARD:  # all cells empty
             return super().make_move()
 
-        columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
-        # diagonals
-        d1 = (self.game_board[0][0], self.game_board[1][1], self.game_board[2][2])
-        d2 = (self.game_board[0][2], self.game_board[1][1], self.game_board[2][0])
-        step = ""
+        # diagonal win or block
+        step = self.scan_diagonals()  # trying to scan diagonals first to avoid the loop
 
+        if step == tuple():
+            columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
         # win or block strategy
-        for i in range(3) or step == "":
-            """ i - column number
-            self.game_board[i].index(' ') - index of column in row i represented as 2D array."""
-            # row win or block
-            if any([self.game_board[i].count(self.sign) == 2,
-                    self.game_board[i].count(self.opponent_sign) == 2]) and " " in self.game_board[i]:
-                step = (i, self.game_board[i].index(' '))
+            for i in range(3):
+                """ i - column number
+                self.game_board[i].index(' ') - index of column in row i represented as 2D array."""
+                # row win or block
+                if any([self.game_board[i].count(self.sign) == 2,
+                        self.game_board[i].count(self.opponent_sign) == 2]) and " " in self.game_board[i]:
+                    step = (i, self.game_board[i].index(' '))
 
-            # column win or block
-            elif any([columns[i].count(self.sign) == 2,
-                      columns[i].count(self.opponent_sign) == 2]) and " " in columns[i]:
-                step = (columns[i].index(' '), i)
-
-            # diagonal win or block
-            elif any([d1.count(self.sign) == 2, d1.count(self.opponent_sign) == 2]) and " " in d1:
-                coordinates = {"0": (0, 0),
-                               "1": (1, 1),
-                               "2": (2, 2)}
-                step = coordinates[str(d1.index(" "))]
-
-            elif any([d2.count(self.sign) == 2, d2.count(self.opponent_sign) == 2]) and " " in d2:
-                coordinates = {"0": (0, 2),
-                               "1": (1, 1),
-                               "2": (2, 0)}
-                step = coordinates[str(d2.index(" "))]
+                # column win or block
+                elif any([columns[i].count(self.sign) == 2,
+                          columns[i].count(self.opponent_sign) == 2]) and " " in columns[i]:
+                    step = (columns[i].index(' '), i)
+                if step:
+                    break
 
         if step:
             self.occupy_cell(*step)

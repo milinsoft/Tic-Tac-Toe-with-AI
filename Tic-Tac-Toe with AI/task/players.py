@@ -154,7 +154,6 @@ class HardBot(MediumBot):
             else:
                 current_player = simulated_player2 if current_player == simulated_player1 else simulated_player1
                 depth += 1
-
                 current_player.make_move(depth)
 
         # sorting putting highest score and lowest depth first

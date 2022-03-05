@@ -93,6 +93,7 @@ fabric.properties
 ### macOS ###
 # General
 .DS_Store
+.Tic-Tac-Toe with AI/.DS_Store
 .AppleDouble
 .LSOverride
 

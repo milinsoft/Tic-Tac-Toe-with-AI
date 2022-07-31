@@ -15,6 +15,7 @@
 
 # AWS User-specific
 .idea/**/aws.xml
+/Tic-Tac-Toe*with*AI/.DS_Store
 
 # Generated files
 .idea/**/contentModel.xml
@@ -92,7 +93,7 @@ fabric.properties
 
 ### macOS ###
 # General
-**.DS_Store
+.DS_Store
 .AppleDouble
 .LSOverride
 

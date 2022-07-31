@@ -4,16 +4,6 @@
     <list default="true" id="2f458340-c9e8-40f5-bec9-6652b18aa070" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/An undefeated champion/task-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/An undefeated champion/task-remote-info.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/An undefeated champion/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/An undefeated champion/task.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Easy does it/task-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Easy does it/task-remote-info.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Easy does it/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Easy does it/task.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Initial setup/task-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Initial setup/task-remote-info.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Initial setup/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Initial setup/task.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Signs of intelligence/task-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Signs of intelligence/task-remote-info.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Signs of intelligence/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Signs of intelligence/task.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Watch 'em fight/task-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Watch 'em fight/task-remote-info.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Watch 'em fight/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tic-Tac-Toe with AI/Watch 'em fight/task.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/course-remote-info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/course-remote-info.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -191,7 +181,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1640979673586</updated>
-      <workItem from="1659284429882" duration="422000" />
+      <workItem from="1659284429882" duration="944000" />
     </task>
     <servers />
   </component>

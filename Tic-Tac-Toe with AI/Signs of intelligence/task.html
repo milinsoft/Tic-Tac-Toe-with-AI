@@ -1,28 +1,19 @@
+<div class="step-text">
 <h5 id="description" style="text-align: center;">Description</h5>
-
 <p>Let's write the <code class="java">medium</code> difficulty level now. To do this, we need to add awareness to our AI.</p>
-
 <p>This level will be a lot harder to beat than <code class="java">easy</code>, even though the initial moves are still random. When the AI is playing at <code class="java">medium</code> level, it wins when it can because of its first rule, and stops all simple attempts to beat it due to its second.</p>
-
 <p>You can see these rules below.</p>
-
 <h5 id="objectives" style="text-align: center;">Objectives</h5>
-
 <p>When the AI is playing at <code class="java">medium</code> difficulty level, it makes moves using the following logic:</p>
-
 <ol>
-	<li>If it already has two in a row and can win with one further move, it does so.</li>
-	<li>If its opponent can win with one move, it plays the move necessary to block this.</li>
-	<li>Otherwise, it makes a random move.</li>
+<li>If it already has two in a row and can win with one further move, it does so.</li>
+<li>If its opponent can win with one move, it plays the move necessary to block this.</li>
+<li>Otherwise, it makes a random move.</li>
 </ol>
-
 <p>You should add a <code class="java">medium</code> parameter so that you can play against this level. It should also be possible to make AIs using <code class="java">easy</code> and <code class="java">medium</code> levels play against each other!</p>
-
 <h5 id="example" style="text-align: center;">Example</h5>
-
-<p>The example below shows how your program should work.<br>
+<p>The example below shows how your program should work.<br/>
 The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
-
 <pre><code class="language-no-highlight">Input command: &gt; start user medium
 ---------
 |       |
@@ -148,3 +139,4 @@ Making move level "medium"
 Draw
 
 Input command: &gt; exit</code></pre>
+</div>

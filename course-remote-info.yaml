@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/262969/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Sun, 31 Jul 2022 16:20:43 UTC
+update_date: "Sun, 11 Jun 2023 19:54:43 UTC"
 stages:
 - id: 452
   step: 7439
@@ -78,10 +78,10 @@ topics:
     theory_id: 5920
   - title: Quotes and multi-line strings
     theory_id: 5814
-  - title: Basic string methods
-    theory_id: 6842
   - title: Indexes
     theory_id: 6189
+  - title: Basic string methods
+    theory_id: 6842
   - title: Type casting
     theory_id: 6224
   - title: Escape sequences
@@ -97,16 +97,16 @@ topics:
     theory_id: 10996
   - title: Introduction to Operating systems
     theory_id: 9704
+  - title: Command line overview
+    theory_id: 8977
+  - title: Parameters and Options
+    theory_id: 9746
   - title: Load module
     theory_id: 6019
   - title: Create module
     theory_id: 6057
   - title: Packages
     theory_id: 6384
-  - title: Command line overview
-    theory_id: 8977
-  - title: Parameters and Options
-    theory_id: 9746
   - title: Pip
     theory_id: 6230
   - title: Virtual Environment
@@ -117,6 +117,8 @@ topics:
     theory_id: 19153
   - title: Debugging Python applications in PyCharm
     theory_id: 19163
+  - title: Linters and helpers
+    theory_id: 18652
   - title: How to read the documentation
     theory_id: 12125
   - title: Random module
@@ -126,6 +128,8 @@ topics:
     theory_id: 7929
   - title: Computer programming
     theory_id: 8739
+  - title: Paradigms
+    theory_id: 15860
   - title: Introduction to OOP
     theory_id: 3614
   - title: Class
@@ -144,10 +148,10 @@ topics:
     theory_id: 8745
   - title: String formatting
     theory_id: 6037
-  - title: Arguments
-    theory_id: 7248
   - title: Identity testing
     theory_id: 8077
+  - title: Arguments
+    theory_id: 7248
   - title: Objects in Python
     theory_id: 9262
   - title: Dictionary
@@ -160,12 +164,16 @@ topics:
     theory_id: 6031
   - title: Default arguments
     theory_id: 10295
+  - title: Set
+    theory_id: 6643
   - title: Tuple
     theory_id: 7462
   - title: Args
     theory_id: 8560
   - title: Kwargs
     theory_id: 9544
+  - title: How to choose a collection to use
+    theory_id: 13907
   - title: Functional decomposition
     theory_id: 9571
   3:
@@ -178,10 +186,10 @@ topics:
   4:
   - title: Computer algorithms
     theory_id: 16547
-  - title: Recursion basics
-    theory_id: 5984
   - title: Algorithms in Python
     theory_id: 7316
+  - title: Recursion basics
+    theory_id: 5984
   - title: Slicing
     theory_id: 6177
   - title: Recursion in Python

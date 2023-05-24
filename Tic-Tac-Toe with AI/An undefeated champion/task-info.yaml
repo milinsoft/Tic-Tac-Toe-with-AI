@@ -9,6 +9,17 @@ files:
 - name: tests.py
   visible: false
   text: |
+    from test.tests import TicTacToeTests
+
+    if __name__ == '__main__':
+        TicTacToeTests().run_tests()
+  learner_created: false
+- name: test/__init__.py
+  visible: false
+  learner_created: false
+- name: test/tests.py
+  visible: false
+  text: |
     from copy import copy
 
     from hstest import StageTest, dynamic_test, TestedProgram, CheckResult
@@ -193,8 +204,6 @@ files:
                 if game_grid.get_grid()[2][0] == CellState.EMPTY:
                     self.is_easy_not_moving_like_medium = True
 
-            program.stop()
-
             return CheckResult.correct()
 
         @dynamic_test(order=6)
@@ -240,8 +249,6 @@ files:
                 game_grid = Grid.from_output(output, 2)
                 if game_grid.get_grid()[2][0] == CellState.EMPTY:
                     return CheckResult.wrong("Looks like your Medium level AI doesn't make a correct move!")
-
-            program.stop()
 
             return CheckResult.correct()
 
@@ -463,9 +470,9 @@ files:
             ...
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/7443#comment
-status: Solved
+status: Failed
 feedback:
-  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
-    Academy</a> to continue learning.
-  time: Sat, 05 Mar 2022 19:23:10 UTC
+  message: "No tests have run. For more information, see <a href=\"https://plugins.jetbrains.com/plugin/10081-jetbrains-academy/docs/troubleshooting-guide.html#no_tests_have_run\"\
+    >the Troubleshooting guide</a>"
+  time: "Sat, 10 Jun 2023 14:33:57 UTC"
 record: 5

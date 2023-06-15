@@ -223,3 +223,12 @@ Temporary Items
 # https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,jetbrains,macos
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/frameworkLessonHistory/storage.storageData
+/.idea/frameworkLessonHistory/storage.storageRecordIndex
+/.idea/tick_tack_toe_with_ai.iml
+/.idea/vcs.xml

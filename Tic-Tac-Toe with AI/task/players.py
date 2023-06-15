@@ -1,169 +1,184 @@
-from copy import copy
 from random import choice
-
-EMPTYBOARD = [[' ', ' ', ' '] for _ in range(3)]
 
 
 class User:
+    """Represents a user player in the Tic-Tac-Toe game."""
 
     def __init__(self, sign, game_board):
-        self.name = None  # need this field for print the message Making move level
+        """
+        Initializes a User object.
+
+        Args:
+            sign (str): The sign ('X' or 'O') of the player.
+            game_board (list): The game board as a 2D list.
+        """
+        self.name = None
         self.sign = sign
         self.game_board = game_board
-        self.opponent_sign = "O" if self.sign == "X" else "X"
-
-    def occupy_cell(self, row, column):
-        self.game_board[row][column] = self.sign
+        self.opponent_sign = 'O' if self.sign == 'X' else 'X'
 
     def make_move(self):
+        """
+        Prompts the user to enter the coordinates and makes a move on the game board.
+        """
         try:
-            row, column = [int(x) - 1 for x in input("Enter the coordinates: ").split()]
-            assert self.game_board[row][column] == " "
+            row, column = [int(x) - 1 for x in input('Enter the coordinates: ').split()]
+            assert self.game_board.board[row][column] == ' '
             if any([row < 0, row > 2, column < 0, column > 2]):
                 raise IndexError
 
         except ValueError:
-            print("You should enter numbers from 1 to 3!")
+            print('You should enter numbers from 1 to 3!')
             return self.make_move()
 
         except IndexError:
-            print("Coordinates should be from 1 to 3!")
+            print('Coordinates should be from 1 to 3!')
             return self.make_move()
 
         except AssertionError:
-            print("This cell is occupied! Choose another one!")
+            print('This cell is occupied! Choose another one!')
             self.make_move()
-
         else:
-            self.occupy_cell(row, column)
-
-    def get_winner(self) -> str:
-        """ Tic-Tac-Toe game for 2 players. X moves 1st then O.
-            The fist who will put own sign 3 time in row, column or horizontally - wins.
-            In all cells are occupied and there is no winner - it's a "Draw", game will be over with no winner.
-        """
-
-        if [self.sign] * 3 in (
-                self.game_board[0], self.game_board[1], self.game_board[2],  # all three rows
-                [self.game_board[0][0], self.game_board[1][0], self.game_board[2][0]],  # left column
-                [self.game_board[0][1], self.game_board[1][1], self.game_board[2][1]],  # middle column
-                [self.game_board[0][2], self.game_board[1][2], self.game_board[2][2]],  # right column
-                [self.game_board[0][2], self.game_board[1][1], self.game_board[2][0]],  # main diagonal
-                [self.game_board[0][0], self.game_board[1][1], self.game_board[2][2]],  # second diagonal
-        ):
-            return self.sign
-
-        elif not bool(sum((self.game_board[0].count(" "), self.game_board[1].count(" "),
-                           self.game_board[2].count(" ")))):
-            return "Draw"
-
-    def print_grid(self):
-        print(f"{9 * '-'}\n"
-              f"| {' '.join(self.game_board[0])} |\n"
-              f"| {' '.join(self.game_board[1])} |\n"
-              f"| {' '.join(self.game_board[2])} |\n"
-              f"{9 * '-'}"
-              )  # printing symbols separately so it's possible to have a blankspace between each of three sybmols
+            self.game_board.occupy_cell(row, column, self.sign)
 
 
 class EasyBot(User):
+    """Represents an easy-level bot player in the Tic-Tac-Toe game."""
+
     def __init__(self, sign, game_board):
+        """
+        Initializes an EasyBot object.
+
+        Args:
+            sign (str): The sign ('X' or 'O') of the player.
+            game_board (list): The game board as a 2D list.
+        """
         super().__init__(sign, game_board)
-        self.name = "easy"
+        self.name = 'easy'
         self.sign = sign
 
     def make_move(self):
-        steps_set = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
-        random_step = choice(steps_set)
-        self.occupy_cell(*random_step)
+        """
+        Makes a random move on an empty cell.
+        """
+        return self.game_board.occupy_cell(*choice(self.game_board.empty_cells), self.sign)
 
 
 class MediumBot(EasyBot):
+    """Represents a medium-level bot player in the Tic-Tac-Toe game."""
+
     def __init__(self, sign, game_board):
+        """
+        Initializes a MediumBot object.
+
+        Args:
+            sign (str): The sign ('X' or 'O') of the player.
+            game_board (list): The game board as a 2D list.
+        """
         super().__init__(sign, game_board)
-        self.name = "medium"
+        self.name = 'medium'
         self.sign = sign
 
-    def scan_diagonals(self) -> tuple:
-        diagonals = (
-            ((0, 0), (1, 1), (2, 2)),
-            ((0, 2), (1, 1), (2, 0)),
-        )
+    def scan_lines(self) -> tuple:
+        """
+        Scans the lines to check for an opportunity to win or block the opponent.
 
-        for diagonal in diagonals:
-            diagonal_symbols = [self.game_board[c[0]][c[1]] for c in diagonal]
-            if any([diagonal_symbols.count(self.sign) == 2, diagonal_symbols.count(self.opponent_sign) == 2]) and " " in diagonal_symbols:
-                empty_cell = diagonal_symbols.index(' ')
-                return diagonal[empty_cell]
-        return tuple()
+        Returns:
+            tuple: The row and column indices of the move if an opportunity is found, False otherwise.
+        """
+        for line in self.game_board.lines_to_check():
+            # this check makes sense only in when one of the players put 2 signs in a line or diagonal
+            line_symbols = set(line)
+            if len(line_symbols) == 2 and ' ' in line_symbols:
+                empty_cell_index = line.index(' ')
+                if line in self.game_board.board:  # row
+                    return self.game_board.board.index(line), empty_cell_index
+                elif line in [self.game_board.board[i][empty_cell_index] for i in range(3)]:  # column
+                    return empty_cell_index, [self.game_board.board[i][empty_cell_index] for i in range(3)].index(line)
+        return ()
 
     def make_move(self):
-        if self.game_board == EMPTYBOARD:  # all cells empty
-            return super().make_move()
-
-        # diagonal win or block
-        step = self.scan_diagonals()  # trying to scan diagonals first to avoid the loop
-
-        if step == tuple():
-            columns = tuple(zip(self.game_board[0], self.game_board[1], self.game_board[2]))
-        # win or block strategy
-            for i in range(3):
-                """ i - column number
-                self.game_board[i].index(' ') - index of column in row i represented as 2D array."""
-                # row win or block
-                if any([self.game_board[i].count(self.sign) == 2,
-                        self.game_board[i].count(self.opponent_sign) == 2]) and " " in self.game_board[i]:
-                    step = (i, self.game_board[i].index(' '))
-
-                # column win or block
-                elif any([columns[i].count(self.sign) == 2,
-                          columns[i].count(self.opponent_sign) == 2]) and " " in columns[i]:
-                    step = (columns[i].index(' '), i)
-                if step:
-                    break
-
-        if step:
-            self.occupy_cell(*step)
+        """
+        Makes a move based on opportunities to win or block the opponent.
+        If no opportunity is found, makes a random move on an empty cell.
+        """
+        # todo potential refactor
+        position = self.scan_lines()
+        if position:
+            self.game_board.occupy_cell(*position, self.sign)
         else:
-            # if algoritm don't find good solution - use the logic of EasyBot.
             super().make_move()
 
 
 class HardBot(MediumBot):
+    """Represents a hard-level bot player in the Tic-Tac-Toe game."""
+
     def __init__(self, sign, game_board):
+        """
+        Initializes a HardBot object.
+
+        Args:
+            sign (str): The sign ('X' or 'O') of the player.
+            game_board (list): The game board as a 2D list.
+        """
         super().__init__(sign, game_board)
-        self.name = "hard"
+        self.name = 'hard'
         self.sign = sign
 
-    def minimax(self, depth) -> tuple:
-        move_scores = dict()
+    def minimax(self, depth, is_maximizing, max_player_sign, min_player_sign) -> int:
+        """
+        Minimax algorithm with depth.
 
-        fake_board = copy(self.game_board)
-        simulated_player1, simulated_player2 =\
-            HardBot(self.sign, fake_board), HardBot(self.opponent_sign, fake_board)
+        Args:
+            depth (int): The current depth of the algorithm.
+            is_maximizing (bool): Whether it's a maximizing or minimizing step.
+            max_player_sign (str): The sign of the maximizing player.
+            min_player_sign (str): The sign of the minimizing player.
 
-        scores = {self.sign: 10, "Draw": 0}  # -10 removed as it makes no sense in this realisation
+        Returns:
+            int: The score of the best move.
+        """
 
-        current_player = simulated_player1
-        empty_cells_coordinates = [(i, j) for i in range(3) for j in range(3) if self.game_board[i][j] == " "]
+        # check winner
+        if winner := self.game_board.get_winner():
+            return {max_player_sign: 10 - depth, min_player_sign: depth - 10, 'Draw': 0}[winner]
 
-        for move in empty_cells_coordinates:
-            current_player.occupy_cell(*move)
-            winner = self.get_winner()
-            if winner:
-                move_scores[move] = (scores[winner], depth)
-            else:
-                current_player = simulated_player2 if current_player == simulated_player1 else simulated_player1
-                depth += 1
-                current_player.make_move(depth)
+        best_score = float('-inf') if is_maximizing else float('inf')
 
-        # sorting putting highest score and lowest depth first
-        move_scores = dict(sorted(move_scores.items(), key=lambda x: (x[1][0], -x[1][1]), reverse=True))
-        return list(move_scores)[0]
+        for row, col in self.game_board.empty_cells:
+            # Make a move
+            self.game_board.board[row][col] = max_player_sign if is_maximizing else min_player_sign
 
-    def make_move(self, depth=0):
-        if self.game_board == EMPTYBOARD:  # all cells empty
+            # Recursively call minimax for the next level
+            score = self.minimax(depth + 1, not is_maximizing, max_player_sign, min_player_sign)
+
+            # Undo the move
+            self.game_board.board[row][col] = ' '
+
+            # Update the best score and depth
+            best_score = max(score, best_score) if is_maximizing else min(score, best_score)
+
+        return best_score
+
+    def make_move(self):
+        """
+        Makes a move based on the minimax algorithm with depth.
+        """
+
+        # skip minimax algorithm at the very beginning for performance reasons
+        if self.game_board.is_clear():
             return super().make_move()
 
-        best_move = self.minimax(depth)
-        return self.occupy_cell(*best_move)  # picking best move
+        min_player_sign = 'X' if self.sign == 'O' else 'O'
+        best_score = float('-inf')
+        best_move = None
+
+        for move in self.game_board.empty_cells:
+            self.game_board.board[move[0]][move[1]] = self.sign
+            score = self.minimax(0, False, self.sign, min_player_sign)
+            self.game_board.board[move[0]][move[1]] = ' '
+
+            if score > best_score:
+                best_score = score
+                best_move = move
+        return self.game_board.occupy_cell(*best_move, self.sign)
